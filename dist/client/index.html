@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ChainSynth by Helikon</title>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/x-icon" href="./img/favicon.ico" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Silkscreen" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <link rel="stylesheet" href="./css/chainsynth.css" />
+        <link rel="stylesheet" href="./css/loader-anim.css" />
+        <script src="https://kit.fontawesome.com/ebf2cd1147.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <script src="bundle.js"></script>
+        <div id="canvas-container" style="position: absolute;"></div>
+        <div
+            class="page-spinner"
+            id="page-spinner"
+        >
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+        <div class="loading-status" id="loading-status">:: connecting to polkadot ::</div>
+        <div class="start-button" id="start-button">START<br>CHAINSYNTH</div>
+        <!-- left panel -->
+        <div class="left-panel">
+            <div class="chainsynth-logo">
+                <span class="chainsynth-logo">CHAINSYNTH</span>
+                <span class="chainsynth-version" id="chainsynth-version">v0.1.0-ALPHA</span>
+            </div>
+            <div class="block-progress-container">
+                <div class="block-details">
+                    <div class="block-number" id="block-number"></div>
+                    <div id="extrinsic-count"></div>
+                    <div id="event-count"></div>
+                </div>
+                <div class="block-progress" id="block-progress">
+                    <div class="circle">
+                        <div class="mask half">
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

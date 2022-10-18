@@ -1,0 +1,29 @@
+{
+    "name": "chainsynth",
+    "version": "0.1.0",
+    "description": "Creative coding with real-time blockchain data.",
+    "scripts": {
+        "build": "webpack --config ./src/client/webpack.prod.js",
+        "dev": "webpack serve --config ./src/client/webpack.dev.js"
+    },
+    "author": "Kutsal Kaan Bilgin <kutsal@helikon.io> (https://github.com/kukabi)",
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "@polkadot/api": "^9.5.2",
+        "@polkadot/api-derive": "^9.5.2",
+        "@polkadot/types": "^9.5.2",
+        "@types/express": "^4.17.14",
+        "@types/node": "^18.11.0",
+        "tone": "^14.7.77",
+        "ts-loader": "^9.4.1",
+        "typescript": "^4.8.4",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-dev-server": "^4.11.1",
+        "webpack-merge": "^5.8.0"
+    },
+    "dependencies": {
+        "express": "^4.18.1",
+        "two.js": "^0.8.10"
+    }
+}
