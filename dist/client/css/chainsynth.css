@@ -98,8 +98,6 @@ span.chainsynth-version {
 .block-progress {
     width: 18px;
     height: 18px;
-    margin-top: 1px;
-    margin-left: 8px;
     background: conic-gradient(#fff 0%, #000 0%);
     border-radius: 50%;
     border-width: 1px;

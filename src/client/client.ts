@@ -213,11 +213,23 @@ class ChainSynth {
                 release: 0.5 +  Math.random(),
             }
         });
+        let reverbMix = 0.5;
+        let reverbDecay = 0.75;
+        if (this.extrinsicCount > 2 && this.extrinsicCount <= 6) {
+            reverbMix = 0.6;
+            reverbDecay = 1.0;
+        } else if (this.extrinsicCount > 6 && this.extrinsicCount <= 10) {
+            reverbMix = 0.75;
+            reverbDecay = 1.25;
+        } else if (this.extrinsicCount > 10) {
+            reverbMix = 0.9;
+            reverbDecay = 1.5;
+        }
         const reverb = new Pizzicato.Effects.Reverb({
             time: 0.5,
-            decay: 0.75,
+            decay: reverbDecay,
             reverse: true,
-            mix: 0.5
+            mix: reverbMix
         });
         const pan = new Pizzicato.Effects.StereoPanner({
             pan: (Math.random() * 2 - 1) / 1.5
