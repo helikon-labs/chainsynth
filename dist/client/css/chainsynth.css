@@ -13,6 +13,7 @@ a:hover,
 a:active {
     color: #ffffffdd;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .start-button {

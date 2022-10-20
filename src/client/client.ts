@@ -139,7 +139,7 @@ class ChainSynth {
         this.root = this.roots[rootIndex];
 
         let block = await this.substrateClient.rpc.chain.getBlock(header.hash);
-        this.ui.blockNumber.innerHTML = "#" + numberFormat.format(header.number.toNumber()).replace(/,/g, "_");
+        this.ui.blockNumber.innerHTML = '<a href="https://polkadot.subscan.io/block/' + header.number.toString() + '" target="_blank">#' + numberFormat.format(header.number.toNumber()).replace(/,/g, "_") + '</a>';
         this.ui.blockDetails.innerHTML = truncate(header.hash.toString());
         this.ui.rootNote.innerHTML = this.root[0];
         this.ui.rootNote.style.color = this.root[3];
