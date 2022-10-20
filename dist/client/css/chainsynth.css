@@ -86,19 +86,19 @@ span.chainsynth-version {
 
 .block-progress-container {
     position: absolute;
-    transform: translate(-52%, -50%);
     top: 50%;
     left: 50%;
-    margin-top: -150px;
+    margin-top: -168px;
+    margin-left: -96px;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
 }
 
-.block-progress {
+.block-progress { 
     width: 18px;
     height: 18px;
-    background: conic-gradient(#fff 0%, #000 0%);
+    background: conic-gradient(#fff 0%, 0, #000 0%);
     border-radius: 50%;
     border-width: 1px;
     border-color: #FFF;
