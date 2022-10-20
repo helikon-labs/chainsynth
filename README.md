@@ -40,3 +40,9 @@ npm run dev
 ```
 
 ChainSynth should be running at `localhost:8080`.
+
+## Tips and Nominations
+
+Tips to [Helikon](https://github.com/helikon-labs) Polkadot account much welcome: `15fTH34bbKGMUjF1bLmTqxPYgpg481imThwhWcQfCyktyBzL`
+
+Helikon Polkadot validator `🏔 HELIKON 🏔/ISTANBUL`: `123kFHVth2udmM79sn3RPQ81HukrQWCxA1vmTWkGHSvkR4k1`
