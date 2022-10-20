@@ -2,7 +2,7 @@ body {
     overflow: hidden;
     margin: 0px;
     background-color: #000000;
-    color: #ffffffdd;
+    color: #ffffffee;
     font-family: "Roboto Mono", Courier, monospace;
     font-size: 14px;
 }
@@ -21,7 +21,7 @@ a:active {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    border-radius: 24px;
+    border-radius: 12px;
     font-size: 48px;
     font-weight: bold;
     letter-spacing: 14px;
