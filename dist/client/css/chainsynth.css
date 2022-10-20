@@ -16,6 +16,10 @@ a:active {
     text-decoration: none;
 }
 
+a:hover {
+    background-color: #FFFFFF22;
+}
+
 .start-button {
     text-align: center;
     position: absolute;
