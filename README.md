@@ -27,7 +27,7 @@ It updates the generated audio at every finalized block as explained below.
   4. G Major
   5. A Major
   6. G Whole-Tone
-- Number of events in the block defines the melody note frequency.
+- Number of events in the block defines the speed of the succession of the melody notes.
 - Number of extrinsics defines the depth of reverb applied to the melody.
 
 ## Build & Run
