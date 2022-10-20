@@ -318,7 +318,10 @@ class ChainSynth {
         if (this.eventCount == 0) {
             return;
         }
-        const radius = (3200 - (16 * this.eventCount)) / 200;
+        let radius = (3200 - (16 * this.eventCount)) / 200;
+        if (this.eventCount > 200) {
+            radius = 1;
+        }
         const distance = 220;
         this.eventCircles.forEach((circle) => {
             this.two.remove(circle);
