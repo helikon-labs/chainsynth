@@ -3,6 +3,8 @@ import { Header } from "@polkadot/types/interfaces";
 import Two from "two.js";
 import { Circle } from "two.js/src/shapes/circle";
 import  * as Pizzicato from 'pizzicato';
+import noteToFrequency from 'note-to-frequency';
+import { truncate } from "./util";
 
 const rpcEndpoint = "wss://polkadot.public.curie.radiumblock.io/ws";
 const numberFormat = new Intl.NumberFormat('en-US');
@@ -25,22 +27,6 @@ String.prototype.hash = function () {
     }
     return hash;
 }
-
-function truncate(
-    fullStr: string,
-    strLen = 10,
-    separator = "...",
-    frontChars = 10,
-    backChars = 8,
-  ) {
-    if (fullStr.length <= strLen) return fullStr;
-  
-    return (
-      fullStr.substring(0, frontChars) +
-      separator +
-      fullStr.substring(fullStr.length - backChars)
-    );
-  }
 
 interface UI {
     canvasContainer: HTMLElement,
@@ -71,28 +57,28 @@ class ChainSynth {
     private melodyEventIndex = 0;
 
     private lastChord: Pizzicato.Group | null = null;
-    private rootNotes: [string, number, number, number[], string][] = [
-        ["C2", 65.41, 98.0, [130.81, 146.83, 164.81, 185.00, 196.00, 220.00, 246.94], "#9A4E7A"],
-        ["F2", 87.31, 130.815, [174.61, 196.00, 220.00, 233.08, 261.63, 293.66, 329.63], "#AACC16"],
-        ["D2", 73.42, 110.0, [146.83, 164.81, 185.00, 207.65, 220.00, 246.94, 277.18], "#4EAA9F"],
-        ["G2", 98.0, 146.83, [196.00, 220.00, 246.94, 261.63, 293.66, 329.63, 349.23], "#326CFE"],
-        ["A2", 110.0, 164.815, [220.00, 246.94, 261.63, 293.66, 329.63, 349.23, 392.00], "#95075B"],
-        ["G#1", 51.91, 155.56, [207.65, 233.08, 261.63, 293.66, 329.63, 369.99], "#0685F0"],
+    private roots: [string, string, string[], string][] = [
+        ['C2', 'G2', ['C3', 'D3', 'E3', 'F#3', 'G3', 'A3', 'B3'], '#9A4E7A'],
+        ['F2', 'C3', ['F3', 'G3', 'A3', 'A#3', 'C4', 'D4', 'E4'], '#AACC16'],
+        ['D2', 'A2', ['D3', 'E3', 'F#3', 'G#3', 'A3', 'B3', 'C#4'], '#4EAA9F'],
+        ['G2', 'D3', ['G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F#4'], '#326CFE'],
+        ['A2', 'E3', ['A3', 'B3', 'C#4', 'D#4', 'E4', 'F#4', 'G#4'], '#95075B'],
+        ['G#2', 'D#3', ['G#3', 'A#3', 'C4', 'D4', 'E4', 'F#4', 'G#4'], '#0685F0'],
     ];
-    private rootNote = this.rootNotes[0];
+    private root = this.roots[0];
     
     constructor() {
         this.ui = {
-            canvasContainer: <HTMLElement>document.getElementById("canvas-container"),
-            startButton: <HTMLElement>document.getElementById("start-button"),
-            pageSpinner: <HTMLElement>document.getElementById("page-spinner"),
-            loadingStatus: <HTMLElement>document.getElementById("loading-status"),
-            blockNumber: <HTMLElement>document.getElementById("block-number"),
-            blockProgress: <HTMLElement>document.getElementById("block-progress"),
-            blockDetails: <HTMLElement>document.getElementById("block-details"),
-            extrinsicCount: <HTMLElement>document.getElementById("extrinsic-count"),
-            eventCount: <HTMLElement>document.getElementById("event-count"),
-            rootNote: <HTMLElement>document.getElementById("root-note"),
+            canvasContainer: <HTMLElement>document.getElementById('canvas-container'),
+            startButton: <HTMLElement>document.getElementById('start-button'),
+            pageSpinner: <HTMLElement>document.getElementById('page-spinner'),
+            loadingStatus: <HTMLElement>document.getElementById('loading-status'),
+            blockNumber: <HTMLElement>document.getElementById('block-number'),
+            blockProgress: <HTMLElement>document.getElementById('block-progress'),
+            blockDetails: <HTMLElement>document.getElementById('block-details'),
+            extrinsicCount: <HTMLElement>document.getElementById('extrinsic-count'),
+            eventCount: <HTMLElement>document.getElementById('event-count'),
+            rootNote: <HTMLElement>document.getElementById('root-note'),
         };
         this.two = new Two({
             fullscreen: true,
@@ -119,6 +105,13 @@ class ChainSynth {
     }
 
     private async start() {
+        // initialize pizzicato
+        let context = Pizzicato.context;
+        let source = context.createBufferSource();
+        source.buffer = context.createBuffer(1, 1, 22050);
+        source.connect(context.destination);
+        source.start();
+
         this.ui.startButton.style.display = "none";
         this.ui.pageSpinner.style.display = "block";
         this.ui.loadingStatus.style.display = "block";
@@ -142,19 +135,18 @@ class ChainSynth {
     }
 
     private async processBlockDetails(header: Header) {
-        let rootIndex = Math.abs(header.hash.toString().hash()) % this.rootNotes.length;
-        this.rootNote = this.rootNotes[rootIndex];
+        let rootIndex = Math.abs(header.hash.toString().hash()) % this.roots.length;
+        this.root = this.roots[rootIndex];
 
         let block = await this.substrateClient.rpc.chain.getBlock(header.hash);
-        this.ui.blockNumber.innerHTML = "Block " + numberFormat.format(header.number.toNumber()).replace(/,/g, "_");
+        this.ui.blockNumber.innerHTML = "#" + numberFormat.format(header.number.toNumber()).replace(/,/g, "_");
         this.ui.blockDetails.innerHTML = truncate(header.hash.toString());
-        this.ui.rootNote.innerHTML = this.rootNote[0];
-        this.ui.rootNote.style.color = this.rootNote[4];
+        this.ui.rootNote.innerHTML = this.root[0];
+        this.ui.rootNote.style.color = this.root[3];
         this.extrinsicCount =  block.block.extrinsics.length;
         this.ui.extrinsicCount.innerHTML = this.extrinsicCount + " extrinsics"
-        this.ui.extrinsicCount.style.color = this.rootNote[4];
-        this.ui.blockProgress.style.display = "block";
-        this.ui.blockProgress.style.background = "conic-gradient(#fff 20%, black 20%)";
+        this.ui.extrinsicCount.style.color = this.root[3];
+        this.ui.blockProgress.style.display = "flex";
         this.lastBlockTime = Date.now();
         this.melodyEventIndex = 0;
 
@@ -166,28 +158,38 @@ class ChainSynth {
             source: 'wave', 
             options: {
                 type: 'sine',
-                frequency: this.rootNote[1],
+                frequency: noteToFrequency(this.root[0]),
                 volume: 0.2,
                 attack: 1.5,
-                release: 1.5,
+                release: 0.5,
             }
         });
-        const distortion = new Pizzicato.Effects.Distortion({
-            gain: 0.2
-        });
-        root.addEffect(distortion);
-        const fifth = new Pizzicato.Sound({ 
+        const rootOctave = new Pizzicato.Sound({ 
             source: 'wave', 
             options: {
                 type: 'sine',
-                frequency: this.rootNote[2],
-                volume: 0.2,
-                attack: 1.0,
-                release: 1.5,
+                frequency: noteToFrequency(this.root[0]) * 2,
+                volume: 0.1,
+                attack: 1.5,
+                release: 0.5,
             }
         });
-        this.lastChord = new Pizzicato.Group([root, fifth]);
-        // this.lastSound.addEffect(this.reverb);
+        const fifth = new Pizzicato.Sound({ 
+            source: 'wave', 
+            options: {
+                type: 'sawtooth',
+                frequency: noteToFrequency(this.root[1]),
+                volume: 0.2,
+                attack: 2.0,
+                release: 2.0,
+            }
+        });
+        const lowPassFilter = new Pizzicato.Effects.LowPassFilter({
+            frequency: 400,
+            peak: 10
+        });
+        fifth.addEffect(lowPassFilter);
+        this.lastChord = new Pizzicato.Group([root, rootOctave, fifth]);
         this.lastChord.play();
 
         const apiAt = await this.substrateClient.at(header.hash);
@@ -200,12 +202,12 @@ class ChainSynth {
     }
 
     private playMelody() {
-        const notes = this.rootNote[3]; 
+        const notes = this.root[2]; 
         const sound = new Pizzicato.Sound({ 
             source: 'wave', 
             options: {
                 type: 'sine',
-                frequency: notes[Math.floor(Math.random() * notes.length)] * 2,
+                frequency: noteToFrequency(notes[Math.floor(Math.random() * notes.length)]) * 2,
                 volume: 0.1 + Math.random() * 0.1,
                 attack: 0.001,
                 release: 0.5 +  Math.random(),
@@ -224,9 +226,9 @@ class ChainSynth {
         sound.addEffect(pan);
         if (Math.random() > 0.75) {
             var pingPongDelay = new Pizzicato.Effects.PingPongDelay({
-                feedback: 0.3,
-                time: 0.2,
-                mix: 0.68
+                feedback: 0.35,
+                time: 0.1,
+                mix: 0.75
             });
             sound.addEffect(pingPongDelay);
         }
@@ -244,19 +246,20 @@ class ChainSynth {
 
     private updateProgress() {
         const elapsed = Math.min(blockTimeMs, Date.now() - this.lastBlockTime);
-        const progressPercent = (elapsed * 100) / blockTimeMs;
-        this.ui.blockProgress.style.background = "conic-gradient(#fff " + progressPercent + "%, black " + progressPercent + "%)";
+        const progressPercent = Math.floor((elapsed * 100) / blockTimeMs);
+        this.ui.blockProgress.style.background = "conic-gradient(#fff " + progressPercent + "%, 0, #000 " + (100 - progressPercent) + "%)";
         setTimeout(() => {
             this.updateProgress();
-        }, 1);
+        }, 10);
     }
 
     private drawExtrinsicOuterCircle(): Circle {
         const centerX = this.two.width * 0.5;
         const centerY = this.two.height * 0.5;
         const circle = this.two.makeCircle(centerX, centerY, 100);
-        circle.noFill();
-        circle.stroke = this.rootNote[4];
+        circle.fill = this.root[3];
+        circle.stroke = this.root[3];
+        circle.opacity = 0.35;
         circle.linewidth = 0.5;
         this.two.update();
         return circle;
@@ -292,7 +295,7 @@ class ChainSynth {
             var x = centerX + Math.cos(angle * i + randomRotation) * distance;
             var y = centerY + Math.sin(angle * i + randomRotation) * distance;
             const circle = this.two.makeCircle(x, y, radius);
-            circle.fill = this.rootNote[4];
+            circle.fill = this.root[3];
             circle.linewidth = 0;
             this.extrinsicCircles.push(circle);
             this.two.update();
@@ -303,7 +306,7 @@ class ChainSynth {
         if (this.eventCount == 0) {
             return;
         }
-        const radius = 12;
+        const radius = (3200 - (16 * this.eventCount)) / 200;
         const distance = 220;
         this.eventCircles.forEach((circle) => {
             this.two.remove(circle);

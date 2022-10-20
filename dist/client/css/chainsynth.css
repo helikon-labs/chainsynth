@@ -2,7 +2,7 @@ body {
     overflow: hidden;
     margin: 0px;
     background-color: #000000;
-    color: #ffffffe5;
+    color: #ffffffdd;
     font-family: "Roboto Mono", Courier, monospace;
     font-size: 14px;
 }
@@ -21,6 +21,7 @@ a:active {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
+    border-radius: 24px;
     font-size: 48px;
     font-weight: bold;
     letter-spacing: 14px;
@@ -49,8 +50,23 @@ a:active {
     min-width: 0;
 }
 
+.network-logo {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 120px;
+    opacity: 0.9;
+}
+
+.github-icon {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 30px;
+    opacity: 0.9;
+}
+
 div.chainsynth-logo {
-    color: #ffffff;
     font-family: "Silkscreen", sans-serif;
     display: flex;
     flex-flow: row nowrap;
@@ -70,21 +86,21 @@ span.chainsynth-version {
 
 .block-progress-container {
     position: absolute;
-    transform: translate(-56%, -50%);
+    transform: translate(-52%, -50%);
     top: 50%;
     left: 50%;
-    margin-top: -300px;
+    margin-top: -150px;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
 }
 
 .block-progress {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     margin-top: 1px;
     margin-left: 8px;
-    background: conic-gradient(#fff 30%, black 30%);
+    background: conic-gradient(#fff 0%, #000 0%);
     border-radius: 50%;
     border-width: 1px;
     border-color: #FFF;
@@ -93,7 +109,7 @@ span.chainsynth-version {
 }
 
 .block-number {
-    margin-left: 12px;
+    margin-left: 8px;
     font-size: 24px;
 }
 
@@ -103,7 +119,7 @@ span.chainsynth-version {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    margin-top: -264px;
+    margin-top: -124px;
     line-height: 20px;
 }
 
