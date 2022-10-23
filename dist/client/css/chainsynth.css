@@ -55,22 +55,6 @@ a:hover {
     min-width: 0;
 }
 
-.network-logo {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 120px;
-    opacity: 0.9;
-}
-
-.github-icon {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    width: 30px;
-    opacity: 0.9;
-}
-
 div.chainsynth-logo {
     font-family: "Silkscreen", sans-serif;
     display: flex;
@@ -84,9 +68,25 @@ span.chainsynth-logo {
     flex-grow: 1;
 }
 
+.network-logo {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 120px;
+    opacity: 0.9;
+}
+
 span.chainsynth-version {
     font-weight: 800;
     margin-left: 4px;
+}
+
+.github-icon {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 30px;
+    opacity: 0.9;
 }
 
 .block-progress-container {
