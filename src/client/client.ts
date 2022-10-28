@@ -6,7 +6,7 @@ import  * as Pizzicato from 'pizzicato';
 import noteToFrequency from 'note-to-frequency';
 import { truncate } from "./util";
 
-const rpcEndpoint = "wss://rpc.polkadot.helikon.io/polkadot";
+const rpcEndpoint = "wss://polkadot.public.curie.radiumblock.io/ws";
 const numberFormat = new Intl.NumberFormat('en-US');
 const blockTimeMs = 6000;
 
