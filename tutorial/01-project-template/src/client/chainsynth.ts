@@ -1,0 +1,1 @@
+alert('Welcome to ChainSynth tutorial no.1!');
