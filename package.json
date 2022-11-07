@@ -9,7 +9,7 @@
     "author": "Kutsal Kaan Bilgin <kutsal@helikon.io> (https://github.com/kukabi)",
     "license": "GPL-3.0-or-later",
     "devDependencies": {
-        "@polkadot/api": "^9.6.2",
+        "@polkadot/api": "^9.7.1",
         "@polkadot/api-derive": "^9.6.2",
         "@polkadot/types": "^9.6.2",
         "@types/express": "^4.17.14",
