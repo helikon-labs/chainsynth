@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
+        "target": "es6",
         "moduleResolution": "node",
         "strict": true,
         "allowJs": true
     },
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts", "client.tsx"]
 }
