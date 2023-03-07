@@ -10,7 +10,7 @@
     "license": "GPL-3.0-or-later",
     "devDependencies": {
         "@polkadot/api": "^9.14.2",
-        "@polkadot/api-derive": "^9.14.2",
+        "@polkadot/api-derive": "^10.0.1",
         "@polkadot/types": "^9.14.2",
         "@types/express": "^4.17.17",
         "@types/node": "^18.14.5",
