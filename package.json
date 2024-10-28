@@ -15,7 +15,7 @@
         "@polkadot/api-derive": "^14.1.1",
         "@polkadot/types": "^14.1.1",
         "@types/express": "^5.0.0",
-        "@types/node": "^22.8.1",
+        "@types/node": "^22.8.2",
         "@types/pizzicato": "^0.6.4",
         "express": "^4.21.1",
         "minimist": "^1.2.8",
