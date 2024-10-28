@@ -20,15 +20,15 @@ ChainSynth currently is a very early version of a generative audio-visual synthe
 
 It updates the generated audio at every finalized block as explained below.
 
-- Modulo of the block hash determines the root note and the scale, from the following set:
-  1. C Lydian
-  2. F Major
-  3. D Major
-  4. G Major
-  5. A Major
-  6. G Whole-Tone
-- Number of events in the block defines the speed of the succession of the melody notes.
-- Number of extrinsics defines the depth of reverb applied to the melody.
+-   Modulo of the block hash determines the root note and the scale, from the following set:
+    1. C Lydian
+    2. F Major
+    3. D Major
+    4. G Major
+    5. A Major
+    6. G Whole-Tone
+-   Number of events in the block defines the speed of the succession of the melody notes.
+-   Number of extrinsics defines the depth of reverb applied to the melody.
 
 ## Build & Run
 

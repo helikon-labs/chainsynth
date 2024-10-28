@@ -1,1 +1,1 @@
-declare module 'note-to-frequency'
+declare module 'note-to-frequency';

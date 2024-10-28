@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  push:
-    tags:
-    - '**'
+    push:
+        tags:
+            - '**'
 
 # remove comments if a recent tag push should
 # terminate the older running action
@@ -12,22 +12,22 @@ on:
 #  cancel-in-progress: true
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Get the version
-        id: get_version
-        run: echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-      - name: Generate changelog
-        id: changelog
-        uses: metcalfc/changelog-generator@v4.0.1
-        with:
-          myToken: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-      - name: GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          body: ${{ steps.changelog.outputs.changelog }}
-          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+    release:
+        name: Release
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Get the version
+              id: get_version
+              run: echo "version=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+            - name: Generate changelog
+              id: changelog
+              uses: metcalfc/changelog-generator@v4.0.1
+              with:
+                  myToken: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+            - name: GitHub Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  body: ${{ steps.changelog.outputs.changelog }}
+                  token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
