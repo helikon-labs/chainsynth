@@ -42,14 +42,280 @@ class Synth {
 
     private rootIndex: number = 0;
     private signal = Signal.X24;
+    private cycle = 0;
 
-    private roots: [string, string[], string][] = [
-        ['C1', ['C3', 'D3', 'E3', 'F#3', 'G3', 'A3', 'B3'], '#9A4E7A'],
-        ['F1', ['F3', 'G3', 'A3', 'A#3', 'C4', 'D4', 'E4'], '#AACC16'],
-        ['D1', ['D3', 'E3', 'F#3', 'G#3', 'A3', 'B3', 'C#4'], '#4EAA9F'],
-        ['G1', ['G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F#4'], '#326CFE'],
-        ['A1', ['A3', 'B3', 'C#4', 'D#4', 'E4', 'F#4', 'G#4'], '#95075B'],
-        ['G#1', ['G#3', 'A#3', 'C4', 'D4', 'E4', 'F#4', 'G#4'], '#0685F0'],
+    /*
+    private roots: [string, string[]][] = [
+        ['C1', ['C3', 'D3', 'E3', 'F#3', 'G3', 'A3', 'B3']],
+        ['F1', ['F3', 'G3', 'A3', 'A#3', 'C4', 'D4', 'E4']],
+        ['D1', ['D3', 'E3', 'F#3', 'G#3', 'A3', 'B3', 'C#4']],
+        ['G1', ['G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F#4']],
+        ['A1', ['A3', 'B3', 'C#4', 'D#4', 'E4', 'F#4', 'G#4']],
+        ['G#1', ['G#3', 'A#3', 'C4', 'D4', 'E4', 'F#4', 'G#4']],
+    ];
+    */
+    private roots: [string, string[]][] = [
+        [
+            'D1',
+            [
+                'D3',
+                'F3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'F3',
+            ],
+        ],
+        [
+            'F1',
+            [
+                'F3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'G3',
+                'A3',
+                'C3',
+                'F3',
+                'A3',
+                'C3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+            ],
+        ],
+        [
+            'Bb1',
+            [
+                'Bb3',
+                'D3',
+                'F3',
+                'A3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'F3',
+                'A3',
+                'Bb3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'D3',
+                'F3',
+                'A3',
+                'C3',
+            ],
+        ],
+        [
+            'A1',
+            [
+                'A3',
+                'C3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'E3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'A3',
+            ],
+        ],
+        [
+            'C2',
+            [
+                'C3',
+                'E3',
+                'G3',
+                'B3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'E3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'F3',
+            ],
+        ],
+        [
+            'G2',
+            [
+                'G3',
+                'Bb3',
+                'D3',
+                'F3',
+                'A3',
+                'Bb3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+            ],
+        ],
+        [
+            'E1',
+            [
+                'Eb3',
+                'G3',
+                'Bb3',
+                'C3',
+                'D3',
+                'Eb3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'C3',
+                'D3',
+                'Eb3',
+                'G3',
+                'Bb3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'Bb3',
+                'C3',
+                'Eb3',
+                'F3',
+            ],
+        ],
+        [
+            'D2',
+            [
+                'D3',
+                'F3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'G3',
+                'A3',
+                'Bb3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'A3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+            ],
+        ],
+        [
+            'F1',
+            [
+                'F3',
+                'A3',
+                'C3',
+                'E3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'F3',
+                'G3',
+                'A3',
+                'C3',
+                'D3',
+                'E3',
+                'F3',
+                'G3',
+                'A3',
+                'B3',
+                'C3',
+                'D3',
+                'E3',
+                'G3',
+                'A3',
+            ],
+        ],
     ];
 
     constructor() {
@@ -100,7 +366,7 @@ class Synth {
                 } else {
                     this.melodySynthChannel.volume.value = volumePercentageToDb(0);
                 }
-                this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 1000);
+                this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 100);
                 this.melodySynthLowpassFilter.frequency.value = map(
                     parameters.filterCutoff,
                     0,
@@ -144,7 +410,8 @@ class Synth {
         this.bassChannel.connect(this.mainChannel);
         this.bassChannel.volume.value = volumePercentageToDb(Constants.DEFAULT_VOLUME_PERCENTAGE);
         // bass root
-        this.bassRootOsc = new Tone.Oscillator('C2', 'sine');
+        const root = this.roots[this.rootIndex][0];
+        this.bassRootOsc = new Tone.Oscillator(root, 'sine');
         this.bassRootChannel = new Tone.Channel();
         this.bassRootChannel.volume.value = volumePercentageToDb(bassParams.rootLevel);
         this.bassRootChannel.connect(this.bassChannel);
@@ -158,14 +425,14 @@ class Synth {
         });
         this.bassLowpassFilter.connect(this.bassChannel);
         // bass octave
-        this.bassOctaveOsc = new Tone.FatOscillator('C3', 'sawtooth');
+        this.bassOctaveOsc = new Tone.FatOscillator(Note.transpose(root, '8P'), 'sawtooth');
         this.bassOctaveChannel = new Tone.Channel();
         this.bassOctaveChannel.volume.value = volumePercentageToDb(bassParams.octaveLevel);
         this.bassOctaveChannel.pan.value = -0.25;
         this.bassOctaveChannel.connect(this.bassLowpassFilter);
         this.bassOctaveOsc.connect(this.bassOctaveChannel);
         // bass fifth
-        this.bassFifthOsc = new Tone.FatOscillator('G3', 'sawtooth');
+        this.bassFifthOsc = new Tone.FatOscillator(Note.transpose(root, '12P'), 'sawtooth');
         this.bassFifthChannel = new Tone.Channel();
         this.bassFifthChannel.volume.value = volumePercentageToDb(bassParams.fifthLevel);
         this.bassFifthChannel.pan.value = 0.35;
@@ -237,8 +504,12 @@ class Synth {
         if (this.signal != signal) {
             return;
         }
+        this.cycle++;
         const notes = this.roots[this.rootIndex][1];
-        const note = notes[Math.floor(Math.random() * notes.length)];
+        let note = notes[Math.floor(Math.random() * notes.length)];
+        if (this.cycle % Math.floor(Math.random() * 17) == 0) {
+            note = Note.transpose(note, '8P');
+        }
         const now = Tone.now();
         this.melodySynth.triggerAttackRelease(note, '4n', now);
     }

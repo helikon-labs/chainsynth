@@ -18,7 +18,7 @@ class TilesUI {
     private readonly eventBus = EventBus.getInstance();
 
     private isOn = false;
-    private signal = Signal.X24;
+    private signal = Signal.X12;
 
     private color = { r: 255, g: 255, b: 255, a: 1 };
 
