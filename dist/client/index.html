@@ -11,39 +11,280 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
         <link rel="stylesheet" href="./css/chainsynth.css" />
-        <link rel="stylesheet" href="./css/loader-anim.css" />
         <script src="https://kit.fontawesome.com/ebf2cd1147.js" crossorigin="anonymous"></script>
     </head>
-    <body>
+    <body id="root">
         <script src="bundle.js"></script>
-        <div id="canvas-container" style="position: absolute"></div>
-        <a href="https://polkadot.network/">
-            <img src="./img/polkadot-logo.svg" alt="Polkadot" class="network-logo" />
-        </a>
-        <a href="https://github.com/helikon-labs/chainsynth">
-            <img src="./img/github-icon.svg" alt="ChainSynth GitHub" class="github-icon" />
-        </a>
-        <div class="page-spinner" id="page-spinner">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
+        <div class="tiles" id="tiles">
+            <!--div class="tile-row">
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+            </div>
+            <div class="tile-row">
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+                <div class="tile" style="background-color: blue;"></div>
+                <div class="tile" style="background-color: red;"></div>
+            </div-->
         </div>
-        <div class="loading-status" id="loading-status">:: connecting to polkadot ::</div>
-        <div class="start-button" id="start-button">START<br />CHAINSYNTH</div>
-        <!-- left panel -->
+        <div class="scene-container" id="scene-container"></div>
+        <div class="content" id="content"></div>
+        <div class="logo-container no-display" id="logo-container">
+            <span class="logo">CHAINSYNTH</span>
+            <span class="version" id="version">v0.1.0-BETA</span>
+        </div>
+        <div class="loading-container no-display" id="loading-container">
+            <div class="loading-animation" id="loading-animation"></div>
+            <span id="loading-status">:: connecting to blockchain ::</span>
+        </div>
+        <div class="volume-control-container no-display" id="volume-control-container">
+            <em class="fas fa-volume-off" id="volume-down"></em>
+            <div class="volume-level-container" id="volume-level-container">
+                <div class="volume-level" id="volume-level"></div>
+            </div>
+            <em class="fas fa-volume-up" id="volume-up"></em>
+        </div>
+        <div class="turn-on-button" id="turn-on-button">
+            <em class="fas fa-power-off"></em>
+        </div>
         <div class="left-panel">
-            <div class="chainsynth-logo">
-                <span class="chainsynth-logo">CHAINSYNTH</span>
-                <span class="chainsynth-version" id="chainsynth-version">v0.1.0-ALPHA</span>
+            <!-- bass module -->
+            <div class="module bass-module no-display" id="bass-module">
+                <div class="module-title-row">
+                    <div class="module-title">BASS</div>
+                    <div class="flex-spacer"></div>
+                    <em
+                        class="fas fa-power-off on module-toggle-button"
+                        id="bass-toggle-button"
+                    ></em>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">RR</div>
+                    <input type="range" value="75" id="bass-root-level-input" />
+                    <div class="module-input-value" id="bass-root-level">75%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">PO</div>
+                    <input type="range" value="0" id="bass-octave-level-input" />
+                    <div class="module-input-value" id="bass-octave-level">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">P5</div>
+                    <input type="range" value="0" id="bass-fifth-level-input" />
+                    <div class="module-input-value" id="bass-fifth-level">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">FC</div>
+                    <input type="range" value="75" id="bass-filter-cutoff-input" />
+                    <div class="module-input-value" id="bass-filter-cutoff">75%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">RV</div>
+                    <input type="range" value="0" id="bass-reverb-level-input" />
+                    <div class="module-input-value" id="bass-reverb-level">0%</div>
+                </div>
+            </div>
+            <!-- melody module -->
+            <div class="module melody-module no-display" id="melody-module">
+                <div class="module-title-row">
+                    <div class="module-title">MELODY</div>
+                    <div class="flex-spacer"></div>
+                    <em
+                        class="fas fa-power-off on module-toggle-button"
+                        id="melody-toggle-button"
+                    ></em>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">VO</div>
+                    <input type="range" value="0" id="melody-level-input" />
+                    <div class="module-input-value" id="melody-level">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">DE</div>
+                    <input type="range" value="0" id="melody-decay-input" />
+                    <div class="module-input-value" id="melody-decay">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">FC</div>
+                    <input type="range" value="50" id="melody-filter-cutoff-input" />
+                    <div class="module-input-value" id="melody-filter-cutoff">50%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">DL</div>
+                    <input type="range" value="0" id="melody-delay-send-input" />
+                    <div class="module-input-value" id="melody-delay-send">0%</div>
+                </div>
             </div>
         </div>
-        <!-- block data -->
-        <div class="block-progress-container">
-            <div class="block-progress" id="block-progress"></div>
-            <div class="block-number" id="block-number"></div>
+        <div class="right-panel">
+            <div class="module no-display" id="block-module">
+                <div class="module-title-row">
+                    <div class="module-title">BLOCK</div>
+                    <div class="flex-spacer"></div>
+                </div>
+                <div class="block-module-row">
+                    <div class="block-module-row-title">BEST:</div>
+                    <div class="flex-spacer"></div>
+                    <div class="block-module-row-value" id="block-module-best">23,234,543</div>
+                </div>
+                <div class="block-module-row">
+                    <div class="block-module-row-title">FINALIZED:</div>
+                    <div class="flex-spacer"></div>
+                    <div class="block-module-row-value" id="block-module-finalized">23,234,541</div>
+                </div>
+                <div class="block-module-progress-container">
+                    <div class="block-module-progress" id="block-module-progress"></div>
+                </div>
+                <div class="block-module-row">
+                    <div class="block-module-row-title">HASH:</div>
+                    <div class="flex-spacer"></div>
+                    <div class="block-module-row-value" id="block-module-hash">0x45d...ff3</div>
+                </div>
+                <div class="block-module-row">
+                    <div class="block-module-row-title">TRANSACTIONS:</div>
+                    <div class="flex-spacer"></div>
+                    <div class="block-module-row-value" id="block-module-transactions">4</div>
+                </div>
+                <div class="block-module-row">
+                    <div class="block-module-row-title">EVENTS:</div>
+                    <div class="flex-spacer"></div>
+                    <div class="block-module-row-value" id="block-module-events">24</div>
+                </div>
+                <div class="block-module-row block-module-signal-row">
+                    <div class="block-module-signal-container">
+                        <div>24x</div>
+                        <div class="block-module-signal" id="block-module-24x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>12x</div>
+                        <div class="block-module-signal" id="block-module-12x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>6x</div>
+                        <div class="block-module-signal" id="block-module-6x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>4x</div>
+                        <div class="block-module-signal" id="block-module-4x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>2x</div>
+                        <div class="block-module-signal" id="block-module-2x-signal"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="module reactor-module no-display" id="reactor-module">
+                <div class="module-title-row">
+                    <div class="module-title">REACTOR</div>
+                    <div class="flex-spacer"></div>
+                    <em
+                        class="fas fa-power-off on module-toggle-button"
+                        id="reactor-toggle-button"
+                    ></em>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">PB</div>
+                    <input type="range" value="0" id="reactor-perturbation-input" />
+                    <div class="module-input-value" id="reactor-perturbation">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">RA</div>
+                    <input type="range" value="50" id="reactor-radius-input" />
+                    <div class="module-input-value" id="reactor-radius">50%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">TR</div>
+                    <input type="range" value="0" id="reactor-trace-input" />
+                    <div class="module-input-value" id="reactor-trace">0%</div>
+                </div>
+            </div>
+            <div class="module no-display" id="tiles-module">
+                <div class="module-title-row">
+                    <div class="module-title">TILES</div>
+                    <div class="flex-spacer"></div>
+                    <em class="fas fa-power-off module-toggle-button" id="tiles-toggle-button"></em>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">EX</div>
+                    <div class="flex-spacer"></div>
+                    <div class="module-input-value" id="tiles-transactions">0</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">EV</div>
+                    <div class="flex-spacer"></div>
+                    <div class="module-input-value" id="tiles-events">0</div>
+                </div>
+            </div>
         </div>
-        <div class="block-details" id="block-details"></div>
-        <div class="extrinsic-count" id="extrinsic-count"></div>
-        <div class="event-count" id="event-count"></div>
-        <div class="root-note" id="root-note"></div>
     </body>
 </html>

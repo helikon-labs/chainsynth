@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "target": "es6",
-        "moduleResolution": "node",
-        "strict": true,
-        "allowJs": true
-    },
-    "include": ["**/*.ts", "client.tsx"]
-}

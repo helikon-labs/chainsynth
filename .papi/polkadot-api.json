@@ -1,0 +1,10 @@
+{
+    "version": 0,
+    "descriptorPath": ".papi/descriptors",
+    "entries": {
+        "polkadot": {
+            "wsUrl": "wss://rpc.helikon.io/polkadot",
+            "metadata": ".papi/metadata/polkadot.scale"
+        }
+    }
+}
