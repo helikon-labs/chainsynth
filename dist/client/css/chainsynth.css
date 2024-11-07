@@ -55,6 +55,10 @@ input[type='range'] {
     color: #7efce0;
 }
 
+.on-bg {
+    background-color: #7efce0;
+}
+
 /* logo */
 .logo-container {
     position: fixed;
@@ -252,22 +256,22 @@ input[type='range'] {
 
 .block-module-signal-row {
     display: flex;
-    justify-content: space-between;
     flex-direction: row;
+    align-items: stretch;
 }
 
 .block-module-signal-container {
     display: flex;
     flex-direction: row;
-    flex-grow: 1;
+    width: 25%;
     align-items: center;
-    gap: 3px;
-    justify-content: flex-end;
+    gap: 4px;
+    justify-content: flex-start;
 }
 
 .block-module-signal {
-    width: 8px;
-    height: 8px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background-color: #7efce0;
 }
@@ -326,6 +330,24 @@ input[type='range'] {
     bottom: 16px;
     transform: translate(50%, 0%);
     font-size: 42px;
+}
+
+.module-signal-container {
+    display: flex;
+    flex-direction: row;
+    width: 25%;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-start;
+}
+
+.module-signal {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid #7efce0;
+    box-sizing: border-box;
+    cursor: pointer;
 }
 
 /* tiles */

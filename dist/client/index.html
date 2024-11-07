@@ -48,6 +48,11 @@
                     ></em>
                 </div>
                 <div class="module-row">
+                    <div class="module-input-title">VO</div>
+                    <input type="range" value="0" id="bass-level-input" />
+                    <div class="module-input-value" id="bass-level">0%</div>
+                </div>
+                <div class="module-row">
                     <div class="module-input-title">RR</div>
                     <input type="range" value="75" id="bass-root-level-input" />
                     <div class="module-input-value" id="bass-root-level">75%</div>
@@ -71,6 +76,70 @@
                     <div class="module-input-title">RV</div>
                     <input type="range" value="0" id="bass-reverb-level-input" />
                     <div class="module-input-value" id="bass-reverb-level">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">VM</div>
+                    <input type="range" value="0" id="bass-volume-modulation-level-input" />
+                    <div class="module-input-value" id="bass-volume-modulation-level">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">RT</div>
+                </div>
+                <div class="rate-selection-row">
+                    <div class="module-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-64x"></div>
+                            <div>64x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-48x"></div>
+                            <div>48x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-32x"></div>
+                            <div>32x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-24x"></div>
+                            <div>24x</div>
+                        </div>
+                    </div>
+                    <div class="module-row block-module-signal-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-16x"></div>
+                            <div>16x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-12x"></div>
+                            <div>12x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-8x"></div>
+                            <div>8x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-6x"></div>
+                            <div>6x</div>
+                        </div>
+                    </div>
+                    <div class="module-row block-module-signal-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal on" id="bass-volume-modulation-rate-4x"></div>
+                            <div>4x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-3x"></div>
+                            <div>3x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-2x"></div>
+                            <div>2x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="bass-volume-modulation-rate-1x"></div>
+                            <div>1x</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- melody module -->
@@ -102,6 +171,65 @@
                     <div class="module-input-title">DL</div>
                     <input type="range" value="0" id="melody-delay-send-input" />
                     <div class="module-input-value" id="melody-delay-send">0%</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">RT</div>
+                </div>
+                <div class="rate-selection-row">
+                    <div class="module-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-64x"></div>
+                            <div>64x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-48x"></div>
+                            <div>48x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-32x"></div>
+                            <div>32x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-24x"></div>
+                            <div>24x</div>
+                        </div>
+                    </div>
+                    <div class="module-row block-module-signal-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-16x"></div>
+                            <div>16x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-12x"></div>
+                            <div>12x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-8x"></div>
+                            <div>8x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-6x"></div>
+                            <div>6x</div>
+                        </div>
+                    </div>
+                    <div class="module-row block-module-signal-row">
+                        <div class="module-signal-container">
+                            <div class="module-signal on" id="melody-rate-4x"></div>
+                            <div>4x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-3x"></div>
+                            <div>3x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-2x"></div>
+                            <div>2x</div>
+                        </div>
+                        <div class="module-signal-container">
+                            <div class="module-signal" id="melody-rate-1x"></div>
+                            <div>1x</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,38 +269,56 @@
                 </div>
                 <div class="block-module-row block-module-signal-row">
                     <div class="block-module-signal-container">
-                        <div>48x</div>
+                        <div class="block-module-signal" id="block-module-64x-signal"></div>
+                        <div>64x</div>
+                    </div>
+                    <div class="block-module-signal-container">
                         <div class="block-module-signal" id="block-module-48x-signal"></div>
+                        <div>48x</div>
                     </div>
                     <div class="block-module-signal-container">
-                        <div>36x</div>
-                        <div class="block-module-signal" id="block-module-36x-signal"></div>
+                        <div class="block-module-signal" id="block-module-32x-signal"></div>
+                        <div>32x</div>
                     </div>
                     <div class="block-module-signal-container">
-                        <div>24x</div>
                         <div class="block-module-signal" id="block-module-24x-signal"></div>
-                    </div>
-                    <div class="block-module-signal-container">
-                        <div>12x</div>
-                        <div class="block-module-signal" id="block-module-12x-signal"></div>
+                        <div>24x</div>
                     </div>
                 </div>
                 <div class="block-module-row block-module-signal-row">
                     <div class="block-module-signal-container">
-                        <div>6x</div>
+                        <div class="block-module-signal" id="block-module-16x-signal"></div>
+                        <div>16x</div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div class="block-module-signal" id="block-module-12x-signal"></div>
+                        <div>12x</div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div class="block-module-signal" id="block-module-8x-signal"></div>
+                        <div>8x</div>
+                    </div>
+                    <div class="block-module-signal-container">
                         <div class="block-module-signal" id="block-module-6x-signal"></div>
+                        <div>6x</div>
                     </div>
+                </div>
+                <div class="block-module-row block-module-signal-row">
                     <div class="block-module-signal-container">
-                        <div>4x</div>
                         <div class="block-module-signal" id="block-module-4x-signal"></div>
+                        <div>4x</div>
                     </div>
                     <div class="block-module-signal-container">
-                        <div>2x</div>
+                        <div class="block-module-signal" id="block-module-3x-signal"></div>
+                        <div>3x</div>
+                    </div>
+                    <div class="block-module-signal-container">
                         <div class="block-module-signal" id="block-module-2x-signal"></div>
+                        <div>2x</div>
                     </div>
                     <div class="block-module-signal-container">
-                        <div>1x</div>
                         <div class="block-module-signal" id="block-module-1x-signal"></div>
+                        <div>1x</div>
                     </div>
                 </div>
             </div>

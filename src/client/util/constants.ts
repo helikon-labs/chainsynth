@@ -1,13 +1,13 @@
 import * as TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
-import { BassParameters, MelodyParameters, ReactorParameters } from '../data/types';
+import { BassParameters, MelodyParameters, ReactorParameters, Trigger } from '../data/types';
 
 export abstract class Constants {
     // RPC
     static readonly KUSAMA_RPC_URL = 'wss://rpc.ibp.network/kusama';
     //static readonly POLKADOT_RPC_URL = 'wss://rpc.ibp.network/polkadot';
-    static readonly POLKADOT_RPC_URL = 'wss://rpc.helikon.io/polkadot';
-    //static readonly POLKADOT_RPC_URL = 'wss://polkadot.rpc.subquery.network';
+    //static readonly POLKADOT_RPC_URL = 'wss://rpc.helikon.io/polkadot';
+    static readonly POLKADOT_RPC_URL = 'wss://rpc.polkadot.io';
     // blockchain
     static readonly BLOCK_TIME_MS = 6000;
     // orbit control
@@ -31,6 +31,7 @@ export abstract class Constants {
     static readonly DEFAULT_VOLUME_PERCENTAGE = 70;
     static readonly VOLUME_CHANGE_STEP = 10;
     static readonly CHORD_TRANSITION_TIME_MS = 500;
+    static readonly PARAMETERS_CHANGE_RAMP_TIME_SEC = 0.005;
     // format
     static readonly BALANCE_FORMAT_DECIMALS = 4;
     static readonly DECIMAL_SEPARATOR = '.';
@@ -56,11 +57,14 @@ export abstract class Polkadot {
 
 export const INIT_BASS_PARAMS: BassParameters = {
     isOn: true,
+    level: 100,
     rootLevel: 25,
     octaveLevel: 18,
     fifthLevel: 10,
     filterCutoff: 10,
     reverbLevel: 40,
+    volumeModulationLevel: 0,
+    volumeModulationRate: Trigger.X4,
 };
 
 export const INIT_REACTOR_PARAMS: ReactorParameters = {
@@ -76,4 +80,5 @@ export const INIT_MELODY_PARAMS: MelodyParameters = {
     decay: 20,
     filterCutoff: 5,
     delaySend: 0,
+    rate: Trigger.X16,
 };

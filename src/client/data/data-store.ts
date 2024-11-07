@@ -3,15 +3,16 @@ import { EventBus } from '../event/event-bus';
 import AsyncLock from 'async-lock';
 import { createClient, PolkadotClient, TypedApi } from 'polkadot-api';
 import { polkadot } from '@polkadot-api/descriptors';
-// import { getWsProvider } from 'polkadot-api/ws-provider/web';
+import { getWsProvider } from 'polkadot-api/ws-provider/web';
 import { BlockInfo } from '@polkadot-api/observable-client';
 import { Constants } from '../util/constants';
 import { ChainSynthEvent } from '../event/event';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { NewFinalizedBlockEvent } from './types';
-import { start } from 'polkadot-api/smoldot';
-import { chainSpec } from 'polkadot-api/chains/polkadot';
-import { getSmProvider } from 'polkadot-api/sm-provider';
+// import { start } from 'polkadot-api/smoldot';
+// import { chainSpec } from 'polkadot-api/chains/polkadot';
+// import { getSmProvider } from 'polkadot-api/sm-provider';
+import { withPolkadotSdkCompat } from 'polkadot-api/polkadot-sdk-compat';
 
 interface DataStoreDelegate {}
 
@@ -24,7 +25,7 @@ class DataStore {
     private readonly finalizedBlockProcessLockKey = 'finalized_block_process';
     private lastFinalizedBlock!: BlockInfo;
 
-    private readonly smoldot = start();
+    // private readonly smoldot = start();
 
     private jsAPI!: ApiPromise;
     private client!: PolkadotClient;
@@ -37,14 +38,16 @@ class DataStore {
     }
 
     async init() {
-        //this.client = createClient(getWsProvider(Constants.POLKADOT_RPC_URL));
-        //this.api = this.client.getTypedApi(polkadot);
+        this.client = createClient(
+            withPolkadotSdkCompat(getWsProvider(Constants.POLKADOT_RPC_URL)),
+        );
+        this.api = this.client.getTypedApi(polkadot);
         const wsProvider = new WsProvider(Constants.POLKADOT_RPC_URL);
         this.jsAPI = await ApiPromise.create({ provider: wsProvider });
 
-        const chain = await this.smoldot.addChain({ chainSpec });
-        this.client = createClient(getSmProvider(chain));
-        this.api = this.client.getTypedApi(polkadot);
+        //const chain = await this.smoldot.addChain({ chainSpec });
+        //this.client = createClient(getSmProvider(chain));
+        //this.api = this.client.getTypedApi(polkadot);
     }
 
     subscribe() {

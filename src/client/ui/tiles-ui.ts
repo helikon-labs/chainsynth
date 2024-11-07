@@ -18,7 +18,7 @@ class TilesUI {
     private readonly eventBus = EventBus.getInstance();
 
     private isOn = false;
-    private triggerRate = Trigger.X12;
+    private triggerRate = Trigger.X32;
 
     private color = { r: 255, g: 255, b: 255, a: 1 };
 
@@ -94,17 +94,17 @@ class TilesUI {
             case Trigger.X6:
                 time /= 6;
                 break;
+            case Trigger.X8:
+                time /= 8;
+                break;
             case Trigger.X12:
                 time /= 12;
                 break;
-            case Trigger.X24:
-                time /= 24;
+            case Trigger.X16:
+                time /= 16;
                 break;
-            case Trigger.X36:
-                time /= 36;
-                break;
-            case Trigger.X48:
-                time /= 48;
+            case Trigger.X32:
+                time /= 32;
                 break;
         }
         if (tile1) {

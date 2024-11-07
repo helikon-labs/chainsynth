@@ -17,10 +17,11 @@ class Synth {
     private sendReverb!: Tone.Freeverb;
     private sendDelay!: Tone.FeedbackDelay;
 
+    private bassParameters!: BassParameters;
     private bassChannel!: Tone.Channel;
+    private bassGain!: Tone.Gain;
     // bass root
     private bassRootOsc!: Tone.Oscillator;
-    private bassRootChannel!: Tone.Channel;
     // bass octave
     private bassOctaveOsc!: Tone.FatOscillator;
     private bassOctaveChannel!: Tone.Channel;
@@ -30,9 +31,13 @@ class Synth {
     // bass LP filter
     private bassLowpassFilter!: Tone.Filter;
     // bass send channels
+    private bassReverbSendHighpassFilter!: Tone.Filter;
     private bassReverbSendChannel!: Tone.Channel;
+    // bass volume modulation
+    private bassVolumeModulationTrigger: Trigger | undefined = Trigger.X4;
 
     // melody
+    private melodyParameters!: MelodyParameters;
     private melodySynth!: Tone.Synth;
     private melodySynthChannel!: Tone.Channel;
     // melody LP filter
@@ -41,31 +46,22 @@ class Synth {
     private melodySynthDelaySendChannel!: Tone.Channel;
 
     private rootIndex: number = 0;
-    private triggerRate = Trigger.X24;
     private cycle = 0;
 
     private roots: [string, string[]][] = [
         ['G1', ['G3', 'Bb3', 'D4', 'F4', 'A4']],
-        ['F1', ['F3', 'A3', 'C4', 'G4']],
+        ['F1', ['F3', 'A3', 'C4', 'G4', 'A4']],
         ['C1', ['C3', 'Eb3', 'G3', 'Bb4']],
-        ['Eb1', ['Eb3', 'G3', 'Bb3']],
+        ['Eb1', ['Eb3', 'G3', 'Bb3', 'D4', 'F4']],
     ];
-
-    /*
-    private roots: [string, string[]][] = [
-        ['C1', ['C3', 'D3', 'E3', 'F#3', 'G3', 'A3', 'B3']],
-        ['F1', ['F3', 'G3', 'A3', 'A#3', 'C4', 'D4', 'E4']],
-        ['D1', ['D3', 'E3', 'F#3', 'G#3', 'A3', 'B3', 'C#4']],
-        ['G1', ['G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F#4']],
-        ['A1', ['A3', 'B3', 'C#4', 'D#4', 'E4', 'F#4', 'G#4']],
-        ['G#1', ['G#3', 'A#3', 'C4', 'D4', 'E4', 'F#4', 'G#4']],
-    ];
-    */
 
     constructor() {
         this.eventBus.register(ChainSynthEvent.VOLUME_CHANGED, (level: number) => {
             if (this.mainChannel) {
-                this.mainChannel.volume.value = volumePercentageToDb(level);
+                this.mainChannel.volume.linearRampTo(
+                    volumePercentageToDb(level),
+                    Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+                );
             }
         });
         this.eventBus.register(
@@ -79,49 +75,13 @@ class Synth {
         this.eventBus.register(
             ChainSynthEvent.BASS_PARAMETERS_UPDATED,
             (parameters: BassParameters) => {
-                if (parameters.isOn) {
-                    this.bassChannel.volume.value = volumePercentageToDb(
-                        Constants.DEFAULT_VOLUME_PERCENTAGE,
-                    );
-                    this.bassReverbSendChannel.volume.value = volumePercentageToDb(
-                        parameters.reverbLevel,
-                    );
-                } else {
-                    this.bassChannel.volume.value = volumePercentageToDb(0);
-                    this.bassReverbSendChannel.volume.value = volumePercentageToDb(0);
-                }
-                this.bassRootChannel.volume.value = volumePercentageToDb(parameters.rootLevel);
-                this.bassOctaveChannel.volume.value = volumePercentageToDb(parameters.octaveLevel);
-                this.bassFifthChannel.volume.value = volumePercentageToDb(parameters.fifthLevel);
-                this.bassLowpassFilter.frequency.value = map(
-                    parameters.filterCutoff,
-                    0,
-                    100,
-                    60,
-                    8000,
-                );
+                this.updateBassParameters(parameters);
             },
         );
         this.eventBus.register(
             ChainSynthEvent.MELODY_PARAMETERS_UPDATED,
             (parameters: MelodyParameters) => {
-                if (parameters.isOn) {
-                    this.melodySynthChannel.volume.value = volumePercentageToDb(parameters.level);
-                } else {
-                    this.melodySynthChannel.volume.value = volumePercentageToDb(0);
-                }
-                console.log(parameters.decay);
-                this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 1);
-                this.melodySynthLowpassFilter.frequency.value = map(
-                    parameters.filterCutoff,
-                    0,
-                    100,
-                    60,
-                    12000,
-                );
-                this.melodySynthDelaySendChannel.volume.value = volumePercentageToDb(
-                    parameters.delaySend,
-                );
+                this.updateMelodyParameters(parameters);
             },
         );
         this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
@@ -135,7 +95,10 @@ class Synth {
         await Tone.start();
         Tone.getTransport().bpm.value = 60;
         this.mainChannel = new Tone.Channel({ channelCount: 2 });
-        this.mainChannel.volume.value = volumePercentageToDb(Constants.DEFAULT_VOLUME_PERCENTAGE);
+        this.mainChannel.volume.rampTo(
+            volumePercentageToDb(Constants.DEFAULT_VOLUME_PERCENTAGE),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
         this.mainChannel.toDestination();
         // send reverb
         this.sendReverb = new Tone.Freeverb({
@@ -145,82 +108,91 @@ class Synth {
         }).connect(this.mainChannel);
         // send delay
         this.sendDelay = new Tone.FeedbackDelay({
-            delayTime: '8n', // Delay time in musical notation or seconds (e.g., "8n" for an eighth note)
-            feedback: 0.65, // Feedback amount (0 to 1)
+            delayTime: '4t',
+            feedback: 0.65,
             wet: 1.0, // Mix amount (0 for dry, 1 for fully wet)
         }).toDestination();
 
         // bass
         this.bassChannel = new Tone.Channel({ channelCount: 2 });
         this.bassChannel.connect(this.mainChannel);
-        this.bassChannel.volume.value = volumePercentageToDb(Constants.DEFAULT_VOLUME_PERCENTAGE);
-        // bass root
-        const root = this.roots[this.rootIndex][0];
-        this.bassRootOsc = new Tone.Oscillator(root, 'sine');
-        this.bassRootChannel = new Tone.Channel();
-        this.bassRootChannel.volume.value = volumePercentageToDb(bassParams.rootLevel);
-        this.bassRootChannel.connect(this.bassChannel);
-        this.bassRootOsc.connect(this.bassRootChannel);
+        this.bassGain = new Tone.Gain(1.0);
+        this.bassGain.connect(this.bassChannel);
+        this.bassChannel.volume.value = 0;
         // bass lowpass filter
         this.bassLowpassFilter = new Tone.Filter({
             type: 'lowpass',
-            frequency: map(bassParams.filterCutoff, 0, 100, 60, 8000),
-            rolloff: -12, // Filter slope (-12, -24, -48, or -96 dB/octave)
+            frequency: 0,
+            rolloff: -12,
             Q: 0,
+            gain: 1.0,
         });
-        this.bassLowpassFilter.connect(this.bassChannel);
+        this.bassLowpassFilter.connect(this.bassGain);
+        // bass root
+        const root = this.roots[this.rootIndex][0];
+        this.bassRootOsc = new Tone.Oscillator(root, 'sine');
+        this.bassRootOsc.volume.value = 0;
+        this.bassRootOsc.connect(this.bassLowpassFilter);
         // bass octave
         this.bassOctaveOsc = new Tone.FatOscillator(Note.transpose(root, '8P'), 'sawtooth');
         this.bassOctaveChannel = new Tone.Channel();
-        this.bassOctaveChannel.volume.value = volumePercentageToDb(bassParams.octaveLevel);
-        this.bassOctaveChannel.pan.value = -0.25;
+        this.bassOctaveChannel.volume.value = 0;
+        this.bassOctaveChannel.pan.linearRampTo(-0.25, Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC);
         this.bassOctaveChannel.connect(this.bassLowpassFilter);
         this.bassOctaveOsc.connect(this.bassOctaveChannel);
         // bass fifth
         this.bassFifthOsc = new Tone.FatOscillator(Note.transpose(root, '12P'), 'sawtooth');
         this.bassFifthChannel = new Tone.Channel();
-        this.bassFifthChannel.volume.value = volumePercentageToDb(bassParams.fifthLevel);
-        this.bassFifthChannel.pan.value = 0.35;
+        this.bassFifthChannel.volume.value = 0;
+        this.bassFifthChannel.pan.linearRampTo(0.35, Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC);
         this.bassFifthChannel.connect(this.bassLowpassFilter);
         this.bassFifthOsc.connect(this.bassFifthChannel);
         // bass reverb
+        this.bassReverbSendHighpassFilter = new Tone.Filter({
+            type: 'highpass',
+            frequency: 1000,
+            rolloff: -12,
+            Q: 0,
+            gain: 1.0,
+        });
         this.bassReverbSendChannel = new Tone.Channel();
         this.bassReverbSendChannel.connect(this.sendReverb);
-        this.bassOctaveChannel.connect(this.bassReverbSendChannel);
-        this.bassFifthChannel.connect(this.bassReverbSendChannel);
-        this.bassReverbSendChannel.volume.value = volumePercentageToDb(bassParams.reverbLevel);
+        this.bassChannel.connect(this.bassReverbSendHighpassFilter);
+        this.bassReverbSendHighpassFilter.connect(this.bassReverbSendChannel);
+        this.bassReverbSendChannel.volume.value = 0;
+        this.updateBassParameters(bassParams);
 
         // melody synth
         this.melodySynthChannel = new Tone.Channel({ channelCount: 2 });
         this.melodySynth = new Tone.Synth({
             envelope: {
-                attack: 0, // time in seconds to reach maximum amplitude
-                decay: map(melodyParams.decay, 0, 100, 0.1, 1),
-                sustain: 0.2, // sustain level (0 to 1)
-                release: 1.0, // time in seconds for the note to fade after release
+                attack: 0,
+                decay: 0,
+                sustain: 0.1,
+                release: 1.0,
             },
             oscillator: {
                 type: 'fatsawtooth',
             },
+            portamento: 0.01,
         });
         // melody lowpass filter
         this.melodySynthLowpassFilter = new Tone.Filter({
             type: 'lowpass',
-            frequency: map(melodyParams.filterCutoff, 0, 100, 60, 12000), // Cutoff frequency in Hz
+            frequency: 0,
             rolloff: -12,
             Q: 1,
         });
         this.melodySynthLowpassFilter.connect(this.melodySynthChannel);
         this.melodySynth.connect(this.melodySynthLowpassFilter);
-        this.melodySynthChannel.volume.value = volumePercentageToDb(melodyParams.level);
+        this.melodySynthChannel.volume.value = 0;
         this.melodySynthChannel.connect(this.mainChannel);
         // melody delay send
         this.melodySynthDelaySendChannel = new Tone.Channel();
         this.melodySynthChannel.connect(this.melodySynthDelaySendChannel);
         this.melodySynthDelaySendChannel.connect(this.sendDelay);
-        this.melodySynthDelaySendChannel.volume.value = volumePercentageToDb(
-            melodyParams.delaySend,
-        );
+        this.melodySynthDelaySendChannel.volume.value = 0;
+        this.updateMelodyParameters(melodyParams);
     }
 
     start() {
@@ -231,32 +203,110 @@ class Synth {
         this.bassFifthOsc.start();
     }
 
-    processFinalizedBlock(block: BlockInfo) {
+    private updateBassParameters(parameters: BassParameters) {
+        if (parameters.isOn) {
+            this.bassChannel.volume.linearRampTo(
+                volumePercentageToDb(parameters.level),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        } else {
+            this.bassChannel.volume.linearRampTo(
+                volumePercentageToDb(0),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        }
+        this.bassRootOsc.volume.linearRampTo(
+            volumePercentageToDb(parameters.rootLevel),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.bassOctaveChannel.volume.linearRampTo(
+            volumePercentageToDb(parameters.octaveLevel),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.bassFifthChannel.volume.linearRampTo(
+            volumePercentageToDb(parameters.fifthLevel),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.bassLowpassFilter.frequency.linearRampTo(
+            map(parameters.filterCutoff, 0, 100, 60, 8000),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.bassReverbSendChannel.volume.linearRampTo(
+            volumePercentageToDb(parameters.reverbLevel),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.bassParameters = parameters;
+    }
+
+    private updateMelodyParameters(parameters: MelodyParameters) {
+        if (parameters.isOn) {
+            this.melodySynthChannel.volume.linearRampTo(
+                volumePercentageToDb(parameters.level),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        } else {
+            this.melodySynthChannel.volume.linearRampTo(
+                volumePercentageToDb(0),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        }
+        this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 1);
+        this.melodySynthLowpassFilter.frequency.linearRampTo(
+            map(parameters.filterCutoff, 0, 100, 60, 12000),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.melodySynthDelaySendChannel.volume.linearRampTo(
+            volumePercentageToDb(parameters.delaySend),
+            Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+        );
+        this.melodyParameters = parameters;
+    }
+
+    private processFinalizedBlock(block: BlockInfo) {
         this.rootIndex = Math.abs(block.hash.hash()) % this.roots.length;
         const root = this.roots[this.rootIndex][0];
-        this.bassRootOsc.frequency.rampTo(root, Constants.CHORD_TRANSITION_TIME_MS / 1000);
-        this.bassOctaveOsc.frequency.rampTo(
+        this.bassRootOsc.frequency.linearRampTo(root, Constants.CHORD_TRANSITION_TIME_MS / 1000);
+        this.bassOctaveOsc.frequency.linearRampTo(
             Note.transpose(root, '8P'),
             Constants.CHORD_TRANSITION_TIME_MS / 1000,
         );
-        this.bassFifthOsc.frequency.rampTo(
+        this.bassFifthOsc.frequency.linearRampTo(
             Note.transpose(root, '12P'),
             Constants.CHORD_TRANSITION_TIME_MS / 1000,
         );
     }
 
     processTrigger(trigger: Trigger) {
-        if (this.triggerRate != trigger) {
-            return;
+        if (trigger == this.melodyParameters.rate && Math.random() > 0.25) {
+            this.cycle++;
+            const notes = this.roots[this.rootIndex][1];
+            let note = notes[Math.floor(Math.random() * notes.length)];
+            if (this.cycle % Math.floor(Math.random() * 17) == 0) {
+                note = Note.transpose(note, '8P');
+            }
+            const now = Tone.now();
+            this.melodySynth.triggerAttackRelease(note, '8n', now);
         }
-        this.cycle++;
-        const notes = this.roots[this.rootIndex][1];
-        let note = notes[Math.floor(Math.random() * notes.length)];
-        if (this.cycle % Math.floor(Math.random() * 17) == 0) {
-            note = Note.transpose(note, '8P');
+        if (trigger == this.bassParameters.volumeModulationRate) {
+            this.bassGain.gain.linearRampTo(1.0, Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC);
+            const filterDiff =
+                (this.bassParameters.filterCutoff / 5) *
+                (1 - this.bassParameters.volumeModulationLevel / 100);
+            this.bassLowpassFilter.frequency.linearRampTo(
+                map(this.bassParameters.filterCutoff + filterDiff, 0, 100, 60, 8000),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+            setTimeout(() => {
+                this.bassGain.gain.linearRampTo(
+                    1.0 - this.bassParameters.volumeModulationLevel / 100,
+                    (Constants.BLOCK_TIME_MS / trigger.valueOf() / 1000 / 8) * 7,
+                );
+                this.bassLowpassFilter.frequency.linearRampTo(
+                    map(this.bassParameters.filterCutoff, 0, 100, 60, 8000),
+                    0.5,
+                );
+            }, 10);
         }
-        const now = Tone.now();
-        this.melodySynth.triggerAttackRelease(note, '8n', now);
     }
 }
 

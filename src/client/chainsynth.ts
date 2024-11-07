@@ -20,6 +20,7 @@ class ChainSynth {
     private synth!: Synth;
 
     private readonly dataStoreDelegate = <DataStoreDelegate>{};
+    private triggerTimeouts: NodeJS.Timeout[] = [];
 
     private readonly uiDelegate = <UIDelegate>{
         onTurnOn: async () => {
@@ -66,48 +67,30 @@ class ChainSynth {
     }
 
     private startOscillator() {
-        this.trigger(1);
-        this.trigger(2);
-        this.trigger(4);
-        this.trigger(6);
-        this.trigger(12);
-        this.trigger(24);
-        this.trigger(36);
-        this.trigger(48);
+        this.trigger();
     }
 
-    private trigger(trigger: Trigger) {
-        this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
-        let timeout = Constants.BLOCK_TIME_MS;
-        switch (trigger) {
-            case Trigger.X1:
-                timeout /= 1;
-                break;
-            case Trigger.X2:
-                timeout /= 2;
-                break;
-            case Trigger.X4:
-                timeout /= 4;
-                break;
-            case Trigger.X6:
-                timeout /= 6;
-                break;
-            case Trigger.X12:
-                timeout /= 12;
-                break;
-            case Trigger.X24:
-                timeout /= 24;
-                break;
-            case Trigger.X36:
-                timeout /= 36;
-                break;
-            case Trigger.X48:
-                timeout /= 48;
-                break;
+    private trigger() {
+        const triggers: Trigger[] = Object.values(Trigger) as Trigger[];
+        this.triggerTimeouts.forEach((timeout, _index, _) => {
+            clearTimeout(timeout);
+        });
+        this.triggerTimeouts = [];
+        for (const trigger of triggers) {
+            this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
+            for (let i = 1; i < trigger.valueOf(); i++) {
+                const timeout = setTimeout(
+                    () => {
+                        this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
+                    },
+                    (Constants.BLOCK_TIME_MS / trigger.valueOf()) * i,
+                );
+                this.triggerTimeouts.push(timeout);
+            }
         }
         setTimeout(() => {
-            this.trigger(trigger);
-        }, timeout);
+            this.trigger();
+        }, Constants.BLOCK_TIME_MS);
     }
 }
 
