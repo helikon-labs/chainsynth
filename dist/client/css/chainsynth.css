@@ -251,19 +251,23 @@ input[type='range'] {
 }
 
 .block-module-signal-row {
+    display: flex;
     justify-content: space-between;
+    flex-direction: row;
 }
 
 .block-module-signal-container {
     display: flex;
     flex-direction: row;
+    flex-grow: 1;
     align-items: center;
     gap: 3px;
+    justify-content: flex-end;
 }
 
 .block-module-signal {
-    width: 14px;
-    height: 14px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background-color: #7efce0;
 }

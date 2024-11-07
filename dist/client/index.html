@@ -15,88 +15,7 @@
     </head>
     <body id="root">
         <script src="bundle.js"></script>
-        <div class="tiles" id="tiles">
-            <!--div class="tile-row">
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-            </div>
-            <div class="tile-row">
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-                <div class="tile" style="background-color: blue;"></div>
-                <div class="tile" style="background-color: red;"></div>
-            </div-->
-        </div>
+        <div class="tiles" id="tiles"></div>
         <div class="scene-container" id="scene-container"></div>
         <div class="content" id="content"></div>
         <div class="logo-container no-display" id="logo-container">
@@ -222,6 +141,14 @@
                 </div>
                 <div class="block-module-row block-module-signal-row">
                     <div class="block-module-signal-container">
+                        <div>48x</div>
+                        <div class="block-module-signal" id="block-module-48x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>36x</div>
+                        <div class="block-module-signal" id="block-module-36x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
                         <div>24x</div>
                         <div class="block-module-signal" id="block-module-24x-signal"></div>
                     </div>
@@ -229,6 +156,8 @@
                         <div>12x</div>
                         <div class="block-module-signal" id="block-module-12x-signal"></div>
                     </div>
+                </div>
+                <div class="block-module-row block-module-signal-row">
                     <div class="block-module-signal-container">
                         <div>6x</div>
                         <div class="block-module-signal" id="block-module-6x-signal"></div>
@@ -240,6 +169,10 @@
                     <div class="block-module-signal-container">
                         <div>2x</div>
                         <div class="block-module-signal" id="block-module-2x-signal"></div>
+                    </div>
+                    <div class="block-module-signal-container">
+                        <div>1x</div>
+                        <div class="block-module-signal" id="block-module-1x-signal"></div>
                     </div>
                 </div>
             </div>

@@ -3,12 +3,15 @@ import { EventBus } from '../event/event-bus';
 import AsyncLock from 'async-lock';
 import { createClient, PolkadotClient, TypedApi } from 'polkadot-api';
 import { polkadot } from '@polkadot-api/descriptors';
-import { getWsProvider } from 'polkadot-api/ws-provider/web';
+// import { getWsProvider } from 'polkadot-api/ws-provider/web';
 import { BlockInfo } from '@polkadot-api/observable-client';
 import { Constants } from '../util/constants';
 import { ChainSynthEvent } from '../event/event';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { NewFinalizedBlockEvent } from './types';
+import { start } from 'polkadot-api/smoldot';
+import { chainSpec } from 'polkadot-api/chains/polkadot';
+import { getSmProvider } from 'polkadot-api/sm-provider';
 
 interface DataStoreDelegate {}
 
@@ -21,6 +24,8 @@ class DataStore {
     private readonly finalizedBlockProcessLockKey = 'finalized_block_process';
     private lastFinalizedBlock!: BlockInfo;
 
+    private readonly smoldot = start();
+
     private jsAPI!: ApiPromise;
     private client!: PolkadotClient;
     private api!: TypedApi<typeof polkadot>;
@@ -32,10 +37,14 @@ class DataStore {
     }
 
     async init() {
-        this.client = createClient(getWsProvider(Constants.POLKADOT_RPC_URL));
-        this.api = this.client.getTypedApi(polkadot);
+        //this.client = createClient(getWsProvider(Constants.POLKADOT_RPC_URL));
+        //this.api = this.client.getTypedApi(polkadot);
         const wsProvider = new WsProvider(Constants.POLKADOT_RPC_URL);
         this.jsAPI = await ApiPromise.create({ provider: wsProvider });
+
+        const chain = await this.smoldot.addChain({ chainSpec });
+        this.client = createClient(getSmProvider(chain));
+        this.api = this.client.getTypedApi(polkadot);
     }
 
     subscribe() {

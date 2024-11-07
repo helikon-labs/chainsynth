@@ -1,4 +1,4 @@
-import { NewFinalizedBlockEvent, Signal } from '../data/types';
+import { NewFinalizedBlockEvent, Trigger } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
 import { Constants } from '../util/constants';
@@ -18,7 +18,7 @@ class TilesUI {
     private readonly eventBus = EventBus.getInstance();
 
     private isOn = false;
-    private signal = Signal.X12;
+    private triggerRate = Trigger.X12;
 
     private color = { r: 255, g: 255, b: 255, a: 1 };
 
@@ -45,8 +45,8 @@ class TilesUI {
                 this.processFinalizedBlockEvent(event);
             },
         );
-        this.eventBus.register(ChainSynthEvent.SIGNAL, (signal: Signal) => {
-            this.processSignal(signal);
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
+            this.processTrigger(trigger);
         });
     }
 
@@ -54,7 +54,7 @@ class TilesUI {
         let html = '';
         for (let i = 0; i < event.extrinsicCount; i++) {
             html += '<div class="tile-row">';
-            for (let j = 0; j < event.eventCount; j++) {
+            for (let j = 0; j < event.eventCount / 20; j++) {
                 if (j % 3 == 0) {
                     html += '<div class="tile"></div>';
                 } else {
@@ -72,33 +72,42 @@ class TilesUI {
         this.color.b = Math.floor((hash / 256) % 256);
     }
 
-    private processSignal(signal: Signal) {
-        if (!this.isOn || this.signal != signal) {
+    private processTrigger(trigger: Trigger) {
+        if (!this.isOn || this.triggerRate != trigger) {
             return;
         }
         const tiles = document.getElementsByClassName('tile');
-        const randomIndex = Math.floor(Math.random() * tiles.length);
-        const tile = tiles.item(randomIndex);
+        let randomIndex = Math.floor(Math.random() * tiles.length);
+        const tile1 = tiles.item(randomIndex);
+        randomIndex = Math.floor(Math.random() * tiles.length);
         let time = Constants.BLOCK_TIME_MS;
-        switch (signal) {
-            case Signal.X2:
+        switch (trigger) {
+            case Trigger.X1:
+                time /= 1;
+                break;
+            case Trigger.X2:
                 time /= 2;
                 break;
-            case Signal.X4:
+            case Trigger.X4:
                 time /= 4;
                 break;
-            case Signal.X6:
+            case Trigger.X6:
                 time /= 6;
                 break;
-            case Signal.X12:
+            case Trigger.X12:
                 time /= 12;
                 break;
-            case Signal.X24:
+            case Trigger.X24:
                 time /= 24;
                 break;
+            case Trigger.X36:
+                time /= 36;
+                break;
+            case Trigger.X48:
+                time /= 48;
+                break;
         }
-        if (tile) {
-            (tile as HTMLDivElement).style.backgroundColor = 'white';
+        if (tile1) {
             const color = { r: this.color.r, g: this.color.g, b: this.color.b, a: 1 };
             const targetColor = { r: 0, g: 0, b: 0, a: 0 };
             const tween = createTween(
@@ -107,11 +116,11 @@ class TilesUI {
                 TWEEN.Easing.Exponential.InOut,
                 time * 2,
                 () => {
-                    (tile as HTMLDivElement).style.backgroundColor =
+                    (tile1 as HTMLDivElement).style.backgroundColor =
                         `rgba(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)}, ${color.a.toFixed(2)})`;
                 },
                 () => {
-                    (tile as HTMLDivElement).style.backgroundColor =
+                    (tile1 as HTMLDivElement).style.backgroundColor =
                         `rgba(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)}, ${color.a.toFixed(2)})`;
                 },
             );

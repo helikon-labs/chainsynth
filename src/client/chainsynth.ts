@@ -10,7 +10,7 @@ import {
     INIT_REACTOR_PARAMS,
 } from './util/constants';
 import { Synth } from './audio/synth';
-import { NewFinalizedBlockEvent, Signal } from './data/types';
+import { NewFinalizedBlockEvent, Trigger } from './data/types';
 
 class ChainSynth {
     private readonly ui: UI;
@@ -66,35 +66,47 @@ class ChainSynth {
     }
 
     private startOscillator() {
-        this.signal(2);
-        this.signal(4);
-        this.signal(6);
-        this.signal(12);
-        this.signal(24);
+        this.trigger(1);
+        this.trigger(2);
+        this.trigger(4);
+        this.trigger(6);
+        this.trigger(12);
+        this.trigger(24);
+        this.trigger(36);
+        this.trigger(48);
     }
 
-    private signal(x: Signal) {
-        this.eventBus.dispatch<Signal>(ChainSynthEvent.SIGNAL, x);
+    private trigger(trigger: Trigger) {
+        this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
         let timeout = Constants.BLOCK_TIME_MS;
-        switch (x) {
-            case Signal.X2:
+        switch (trigger) {
+            case Trigger.X1:
+                timeout /= 1;
+                break;
+            case Trigger.X2:
                 timeout /= 2;
                 break;
-            case Signal.X4:
+            case Trigger.X4:
                 timeout /= 4;
                 break;
-            case Signal.X6:
+            case Trigger.X6:
                 timeout /= 6;
                 break;
-            case Signal.X12:
+            case Trigger.X12:
                 timeout /= 12;
                 break;
-            case Signal.X24:
+            case Trigger.X24:
                 timeout /= 24;
+                break;
+            case Trigger.X36:
+                timeout /= 36;
+                break;
+            case Trigger.X48:
+                timeout /= 48;
                 break;
         }
         setTimeout(() => {
-            this.signal(x);
+            this.trigger(trigger);
         }, timeout);
     }
 }

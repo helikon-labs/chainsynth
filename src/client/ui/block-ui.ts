@@ -4,7 +4,7 @@ import { ChainSynthEvent } from '../event/event';
 import { formatNumber, truncate } from '../util/format';
 import { createTween, fadeElement, startTween } from '../util/tween';
 import { Constants } from '../util/constants';
-import { NewFinalizedBlockEvent, Signal } from '../data/types';
+import { NewFinalizedBlockEvent, Trigger } from '../data/types';
 import * as TWEEN from '@tweenjs/tween.js';
 
 interface UI {
@@ -15,11 +15,14 @@ interface UI {
     hash: HTMLDivElement;
     transactions: HTMLDivElement;
     events: HTMLDivElement;
+    x1Signal: HTMLDivElement;
     x2Signal: HTMLDivElement;
     x4Signal: HTMLDivElement;
     x6Signal: HTMLDivElement;
     x12Signal: HTMLDivElement;
     x24Signal: HTMLDivElement;
+    x36Signal: HTMLDivElement;
+    x48Signal: HTMLDivElement;
 }
 
 class BlockUI {
@@ -36,11 +39,14 @@ class BlockUI {
             hash: <HTMLDivElement>document.getElementById('block-module-hash'),
             transactions: <HTMLDivElement>document.getElementById('block-module-transactions'),
             events: <HTMLDivElement>document.getElementById('block-module-events'),
+            x1Signal: <HTMLDivElement>document.getElementById('block-module-1x-signal'),
             x2Signal: <HTMLDivElement>document.getElementById('block-module-2x-signal'),
             x4Signal: <HTMLDivElement>document.getElementById('block-module-4x-signal'),
             x6Signal: <HTMLDivElement>document.getElementById('block-module-6x-signal'),
             x12Signal: <HTMLDivElement>document.getElementById('block-module-12x-signal'),
             x24Signal: <HTMLDivElement>document.getElementById('block-module-24x-signal'),
+            x36Signal: <HTMLDivElement>document.getElementById('block-module-36x-signal'),
+            x48Signal: <HTMLDivElement>document.getElementById('block-module-48x-signal'),
         };
         this.ui.bestBlock.innerHTML = '';
         this.ui.finalizedBlock.innerHTML = '';
@@ -50,8 +56,8 @@ class BlockUI {
         this.eventBus.register(ChainSynthEvent.NEW_BEST_BLOCK, (block: BlockInfo) => {
             this.processBestBlock(block);
         });
-        this.eventBus.register(ChainSynthEvent.SIGNAL, (x: Signal) => {
-            this.processSignal(x);
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
+            this.processTrigger(trigger);
         });
         this.eventBus.register(
             ChainSynthEvent.NEW_FINALIZED_BLOCK,
@@ -85,29 +91,41 @@ class BlockUI {
         this.ui.events.innerHTML = event.eventCount.toString();
     }
 
-    private processSignal(x: Signal) {
-        let element = this.ui.x2Signal;
+    private processTrigger(trigger: Trigger) {
+        let element = this.ui.x1Signal;
         let time = Constants.BLOCK_TIME_MS;
-        switch (x) {
-            case Signal.X2:
+        switch (trigger) {
+            case Trigger.X1:
+                element = this.ui.x1Signal;
+                time /= 1;
+                break;
+            case Trigger.X2:
                 element = this.ui.x2Signal;
                 time /= 2;
                 break;
-            case Signal.X4:
+            case Trigger.X4:
                 element = this.ui.x4Signal;
                 time /= 4;
                 break;
-            case Signal.X6:
+            case Trigger.X6:
                 element = this.ui.x6Signal;
                 time /= 6;
                 break;
-            case Signal.X12:
+            case Trigger.X12:
                 element = this.ui.x12Signal;
                 time /= 12;
                 break;
-            case Signal.X24:
+            case Trigger.X24:
                 element = this.ui.x24Signal;
                 time /= 24;
+                break;
+            case Trigger.X36:
+                element = this.ui.x36Signal;
+                time /= 36;
+                break;
+            case Trigger.X48:
+                element = this.ui.x48Signal;
+                time /= 48;
                 break;
         }
         const color = { r: 126, g: 252, b: 224, a: 1 };

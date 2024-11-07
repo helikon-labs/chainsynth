@@ -1,11 +1,14 @@
 import { BlockInfo } from '@polkadot-api/observable-client';
 
-enum Signal {
+enum Trigger {
+    X1 = 1,
     X2 = 2,
     X4 = 4,
     X6 = 6,
     X12 = 12,
     X24 = 24,
+    X36 = 36,
+    X48 = 48,
 }
 
 interface BassParameters {
@@ -38,4 +41,4 @@ interface NewFinalizedBlockEvent {
     eventCount: number;
 }
 
-export { BassParameters, ReactorParameters, MelodyParameters, NewFinalizedBlockEvent, Signal };
+export { BassParameters, ReactorParameters, MelodyParameters, NewFinalizedBlockEvent, Trigger };

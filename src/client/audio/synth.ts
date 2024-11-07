@@ -5,7 +5,7 @@ import { ChainSynthEvent } from '../event/event';
 import { BlockInfo } from '@polkadot-api/observable-client';
 import { Note } from 'tonal';
 import { volumePercentageToDb } from '../util/audio-util';
-import { BassParameters, MelodyParameters, NewFinalizedBlockEvent, Signal } from '../data/types';
+import { BassParameters, MelodyParameters, NewFinalizedBlockEvent, Trigger } from '../data/types';
 
 const map = (value: number, x1: number, y1: number, x2: number, y2: number): number =>
     ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -41,8 +41,15 @@ class Synth {
     private melodySynthDelaySendChannel!: Tone.Channel;
 
     private rootIndex: number = 0;
-    private signal = Signal.X24;
+    private triggerRate = Trigger.X24;
     private cycle = 0;
+
+    private roots: [string, string[]][] = [
+        ['G1', ['G3', 'Bb3', 'D4', 'F4', 'A4']],
+        ['F1', ['F3', 'A3', 'C4', 'G4']],
+        ['C1', ['C3', 'Eb3', 'G3', 'Bb4']],
+        ['Eb1', ['Eb3', 'G3', 'Bb3']],
+    ];
 
     /*
     private roots: [string, string[]][] = [
@@ -54,269 +61,6 @@ class Synth {
         ['G#1', ['G#3', 'A#3', 'C4', 'D4', 'E4', 'F#4', 'G#4']],
     ];
     */
-    private roots: [string, string[]][] = [
-        [
-            'D1',
-            [
-                'D3',
-                'F3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'F3',
-            ],
-        ],
-        [
-            'F1',
-            [
-                'F3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'G3',
-                'A3',
-                'C3',
-                'F3',
-                'A3',
-                'C3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-            ],
-        ],
-        [
-            'Bb1',
-            [
-                'Bb3',
-                'D3',
-                'F3',
-                'A3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'F3',
-                'A3',
-                'Bb3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'D3',
-                'F3',
-                'A3',
-                'C3',
-            ],
-        ],
-        [
-            'A1',
-            [
-                'A3',
-                'C3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'E3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'A3',
-            ],
-        ],
-        [
-            'C2',
-            [
-                'C3',
-                'E3',
-                'G3',
-                'B3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'E3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'F3',
-            ],
-        ],
-        [
-            'G2',
-            [
-                'G3',
-                'Bb3',
-                'D3',
-                'F3',
-                'A3',
-                'Bb3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-            ],
-        ],
-        [
-            'E1',
-            [
-                'Eb3',
-                'G3',
-                'Bb3',
-                'C3',
-                'D3',
-                'Eb3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'C3',
-                'D3',
-                'Eb3',
-                'G3',
-                'Bb3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'Bb3',
-                'C3',
-                'Eb3',
-                'F3',
-            ],
-        ],
-        [
-            'D2',
-            [
-                'D3',
-                'F3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'G3',
-                'A3',
-                'Bb3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'A3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-            ],
-        ],
-        [
-            'F1',
-            [
-                'F3',
-                'A3',
-                'C3',
-                'E3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'F3',
-                'G3',
-                'A3',
-                'C3',
-                'D3',
-                'E3',
-                'F3',
-                'G3',
-                'A3',
-                'B3',
-                'C3',
-                'D3',
-                'E3',
-                'G3',
-                'A3',
-            ],
-        ],
-    ];
 
     constructor() {
         this.eventBus.register(ChainSynthEvent.VOLUME_CHANGED, (level: number) => {
@@ -366,7 +110,8 @@ class Synth {
                 } else {
                     this.melodySynthChannel.volume.value = volumePercentageToDb(0);
                 }
-                this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 100);
+                console.log(parameters.decay);
+                this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 1);
                 this.melodySynthLowpassFilter.frequency.value = map(
                     parameters.filterCutoff,
                     0,
@@ -379,9 +124,9 @@ class Synth {
                 );
             },
         );
-        this.eventBus.register(ChainSynthEvent.SIGNAL, (signal: Signal) => {
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
             if (this.isStarted) {
-                this.processSignal(signal);
+                this.processTrigger(trigger);
             }
         });
     }
@@ -450,7 +195,7 @@ class Synth {
         this.melodySynth = new Tone.Synth({
             envelope: {
                 attack: 0, // time in seconds to reach maximum amplitude
-                decay: map(melodyParams.decay, 0, 100, 0.1, 1000),
+                decay: map(melodyParams.decay, 0, 100, 0.1, 1),
                 sustain: 0.2, // sustain level (0 to 1)
                 release: 1.0, // time in seconds for the note to fade after release
             },
@@ -462,7 +207,7 @@ class Synth {
         this.melodySynthLowpassFilter = new Tone.Filter({
             type: 'lowpass',
             frequency: map(melodyParams.filterCutoff, 0, 100, 60, 12000), // Cutoff frequency in Hz
-            rolloff: -12, // Filter slope (-12, -24, -48, or -96 dB/octave)
+            rolloff: -12,
             Q: 1,
         });
         this.melodySynthLowpassFilter.connect(this.melodySynthChannel);
@@ -489,19 +234,19 @@ class Synth {
     processFinalizedBlock(block: BlockInfo) {
         this.rootIndex = Math.abs(block.hash.hash()) % this.roots.length;
         const root = this.roots[this.rootIndex][0];
-        this.bassRootOsc.frequency.rampTo(root, Constants.BLOCK_TRANSITION_ANIM_DURATION_MS / 1000);
+        this.bassRootOsc.frequency.rampTo(root, Constants.CHORD_TRANSITION_TIME_MS / 1000);
         this.bassOctaveOsc.frequency.rampTo(
             Note.transpose(root, '8P'),
-            Constants.BLOCK_TRANSITION_ANIM_DURATION_MS / 1000,
+            Constants.CHORD_TRANSITION_TIME_MS / 1000,
         );
         this.bassFifthOsc.frequency.rampTo(
             Note.transpose(root, '12P'),
-            Constants.BLOCK_TRANSITION_ANIM_DURATION_MS / 1000,
+            Constants.CHORD_TRANSITION_TIME_MS / 1000,
         );
     }
 
-    processSignal(signal: Signal) {
-        if (this.signal != signal) {
+    processTrigger(trigger: Trigger) {
+        if (this.triggerRate != trigger) {
             return;
         }
         this.cycle++;
@@ -511,7 +256,7 @@ class Synth {
             note = Note.transpose(note, '8P');
         }
         const now = Tone.now();
-        this.melodySynth.triggerAttackRelease(note, '4n', now);
+        this.melodySynth.triggerAttackRelease(note, '8n', now);
     }
 }
 

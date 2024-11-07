@@ -221,7 +221,7 @@ class ChainSynthScene {
             perturbationFactor,
             { factor: target },
             TWEEN.Easing.Linear.InOut,
-            1000,
+            Constants.CHORD_TRANSITION_TIME_MS,
             () => {},
             () => {
                 this.updateGeometry(perturbationFactor.factor);
@@ -266,7 +266,7 @@ class ChainSynthScene {
             color,
             endColor,
             TWEEN.Easing.Linear.InOut,
-            1000,
+            Constants.CHORD_TRANSITION_TIME_MS,
             undefined,
             () => {
                 this.reactorMaterial.color = color;
