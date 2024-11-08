@@ -234,7 +234,6 @@ class ChainSynthScene {
 
     private perturb(target: number) {
         const perturbationFactor = { factor: this.perturbationFactor };
-
         const tween = createTween(
             perturbationFactor,
             { factor: target },
@@ -314,7 +313,7 @@ class ChainSynthScene {
         const radius = {
             radius:
                 this.reactorRadius *
-                map(this.bassParameters.volumeModulationLevel, 0, 100, 1.01, 1.3),
+                map(this.bassParameters.volumeModulationLevel, 0, 100, 1.01, 1.5),
         };
         this.reactorRadius = targetRadius.radius;
         this.updateGeometry(this.perturbationFactor);

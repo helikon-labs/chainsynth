@@ -9,8 +9,9 @@ import { MelodyUI } from './melody-ui';
 import { ReactorUI } from './reactor-ui';
 import { VolumeControl } from './volume-control';
 import { BassParameters, MelodyParameters, ReactorParameters } from '../data/types';
-import { BlockUI } from './block-ui';
+import { TriggerUI } from './trigger-ui';
 import { TilesUI } from './tiles-ui';
+import { MainBlockUI } from './main-block-ui';
 
 interface UIDelegate {
     onTurnOn(): void;
@@ -30,8 +31,9 @@ class UI {
     private readonly bass: BassUI;
     private readonly reactor: ReactorUI;
     private readonly melody: MelodyUI;
-    private readonly block: BlockUI;
+    private readonly trigger: TriggerUI;
     private readonly tiles: TilesUI;
+    private readonly mainBlock: MainBlockUI;
 
     private delegate: UIDelegate;
     private readonly eventBus = EventBus.getInstance();
@@ -51,8 +53,9 @@ class UI {
         this.bass = new BassUI();
         this.reactor = new ReactorUI();
         this.melody = new MelodyUI();
-        this.block = new BlockUI();
+        this.trigger = new TriggerUI();
         this.tiles = new TilesUI();
+        this.mainBlock = new MainBlockUI();
 
         hide(this.content);
         hide(this.loading);
@@ -107,8 +110,9 @@ class UI {
                     this.bass.show(bassParams);
                     this.reactor.show(reactorParams);
                     this.melody.show(melodyParams);
-                    this.block.show();
+                    this.trigger.show();
                     this.tiles.show();
+                    this.mainBlock.show();
                     this.scene.start(onComplete);
                 });
                 this.volumeControl.fadeIn();

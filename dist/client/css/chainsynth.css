@@ -244,42 +244,29 @@ input[type='range'] {
     width: 75%;
 }
 
-/* block module */
-.block-module-row {
+/* trigger module */
+.trigger-module-row {
     height: 26px;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.block-module-row-title {
+.trigger-module-row-title {
     flex-shrink: 0;
 }
 
-.block-module-row-value {
+.trigger-module-row-value {
     flex-shrink: 0;
 }
 
-.block-module-progress-container {
-    width: 100%;
-    height: 4px;
-    margin: 6px 0px;
-    overflow: hidden;
-}
-
-.block-module-progress {
-    width: 20%;
-    height: 100%;
-    background-color: #dddddd;
-}
-
-.block-module-signal-row {
+.trigger-module-signal-row {
     display: flex;
     flex-direction: row;
     align-items: stretch;
 }
 
-.block-module-signal-container {
+.trigger-module-signal-container {
     display: flex;
     flex-direction: row;
     width: 25%;
@@ -288,7 +275,7 @@ input[type='range'] {
     justify-content: flex-start;
 }
 
-.block-module-signal {
+.trigger-module-signal {
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -389,4 +376,61 @@ input[type='range'] {
 
 .tile {
     flex-grow: 1;
+}
+
+/* main block module */
+.main-block-module {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    background-color: #333333cc;
+    border: 1px solid #dddddd;
+    width: 360px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.main-block-module-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.main-block-module-row {
+    height: 22px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.main-block-module-number {
+    width: 100%;
+    text-align: end;
+}
+
+.main-block-module-signal {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #7efce0;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.main-block-module-progress-container {
+    width: 100%;
+    height: 4px;
+    margin: 6px 0px;
+    overflow: hidden;
+}
+
+.main-block-module-progress {
+    width: 20%;
+    height: 100%;
+    background-color: #dddddd;
 }

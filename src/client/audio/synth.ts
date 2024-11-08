@@ -16,12 +16,57 @@ import {
 const map = (value: number, x1: number, y1: number, x2: number, y2: number): number =>
     ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
 
+const ROOTS: [string, string, string[]][] = [
+    ['G1', 'G min', ['G3', 'Bb3', 'D4', 'F4', 'A4']],
+    ['F1', 'F maj', ['F3', 'A3', 'C4', 'G4', 'A4']],
+    ['C1', 'C min', ['C3', 'Eb3', 'G3', 'Bb4']],
+    ['Eb1', 'Eb maj', ['Eb3', 'G3', 'Bb3', 'D4', 'F4']],
+];
+
 class Synth {
     private readonly eventBus = EventBus.getInstance();
     private isStarted = false;
     private mainChannel!: Tone.Channel;
     private sendReverb!: Tone.Freeverb;
     private sendDelay!: Tone.FeedbackDelay;
+
+    // block
+    private kickSteps = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+    ];
+    private snareSteps = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+    ];
 
     private bassParameters!: BassParameters;
     private bassChannel!: Tone.Channel;
@@ -47,21 +92,19 @@ class Synth {
     private melodySynth!: Tone.Synth;
     private melodySynthChannel!: Tone.Channel;
     // melody LP filter
-    private melodySynthSplit!: Tone.Split;
-    private melodySynthMerge!: Tone.Merge;
     private melodySynthLowpassFilter!: Tone.Filter;
     // melody send
     private melodySynthDelaySendChannel!: Tone.Channel;
 
+    // kick
+    private beatStep = 0;
+    private kick!: Tone.MembraneSynth;
+    private kickChannel!: Tone.Channel;
+    private snare!: Tone.NoiseSynth;
+    private snareChannel!: Tone.Channel;
+
     private rootIndex: number = 0;
     private cycle = 0;
-
-    private roots: [string, string[]][] = [
-        ['G1', ['G3', 'Bb3', 'D4', 'F4', 'A4']],
-        ['F1', ['F3', 'A3', 'C4', 'G4', 'A4']],
-        ['C1', ['C3', 'Eb3', 'G3', 'Bb4']],
-        ['Eb1', ['Eb3', 'G3', 'Bb3', 'D4', 'F4']],
-    ];
 
     constructor() {
         this.eventBus.register(ChainSynthEvent.VOLUME_CHANGED, (level: number) => {
@@ -137,7 +180,7 @@ class Synth {
         });
         this.bassLowpassFilter.connect(this.bassGain);
         // bass root
-        const root = this.roots[this.rootIndex][0];
+        const root = ROOTS[this.rootIndex][0];
         this.bassRootOsc = new Tone.Oscillator(root, 'sine');
         this.bassRootOsc.volume.value = 0;
         this.bassRootOsc.connect(this.bassLowpassFilter);
@@ -200,6 +243,25 @@ class Synth {
         this.melodySynthDelaySendChannel.connect(this.sendDelay);
         this.melodySynthDelaySendChannel.volume.value = 0;
         this.updateMelodyParameters(melodyParams);
+
+        // kick
+        this.kickChannel = new Tone.Channel();
+        this.kickChannel.connect(this.mainChannel);
+        this.kick = new Tone.MembraneSynth({
+            pitchDecay: 0.05,
+            octaves: 4,
+            oscillator: { type: 'sine' },
+            envelope: { attack: 0.005, decay: 0.25, sustain: 0 },
+        });
+        this.kick.connect(this.kickChannel);
+        // snare
+        this.snareChannel = new Tone.Channel();
+        this.snareChannel.connect(this.mainChannel);
+        this.snare = new Tone.NoiseSynth({
+            noise: { type: 'white' },
+            envelope: { attack: 0.001, decay: 0.2, sustain: 0 },
+        });
+        this.snare.connect(this.snareChannel);
     }
 
     start() {
@@ -271,8 +333,15 @@ class Synth {
     }
 
     private processFinalizedBlock(block: BlockInfo) {
-        this.rootIndex = Math.abs(block.hash.hash()) % this.roots.length;
-        const root = this.roots[this.rootIndex][0];
+        const bits = parseInt(block.hash.slice(-8), 16).toString(2).padStart(32, '0');
+        for (let i = 15; i >= 0; i--) {
+            this.kickSteps[i] = bits.charAt(i) == '1';
+        }
+        for (let i = 31; i >= 16; i--) {
+            this.snareSteps[i - 16] = bits.charAt(i) == '1';
+        }
+        this.rootIndex = Math.abs(block.hash.hash()) % ROOTS.length;
+        const root = ROOTS[this.rootIndex][0];
         this.bassRootOsc.frequency.linearRampTo(root, Constants.CHORD_TRANSITION_TIME_MS / 1000);
         this.bassOctaveOsc.frequency.linearRampTo(
             Note.transpose(root, '8P'),
@@ -287,7 +356,7 @@ class Synth {
     processTrigger(event: TriggerEvent) {
         if (event.trigger == this.melodyParameters.rate && event.random > 0.1) {
             this.cycle++;
-            const notes = this.roots[this.rootIndex][1];
+            const notes = ROOTS[this.rootIndex][2];
             let note = notes[Math.floor(Math.random() * notes.length)];
             if (this.cycle % Math.floor(Math.random() * 17) == 0) {
                 note = Note.transpose(note, '8P');
@@ -315,7 +384,23 @@ class Synth {
                 );
             }, 10);
         }
+        if (event.trigger == Trigger.X4) {
+            this.beatStep = 0;
+        }
+        let velocity = 0.5;
+        if (this.beatStep % 4 == 0) {
+            velocity = 1.0;
+        }
+        if (event.trigger == Trigger.X64) {
+            if (this.kickSteps[this.beatStep]) {
+                this.kick.triggerAttackRelease('C1', '16n', Tone.now(), velocity);
+            }
+            if (this.snareSteps[this.beatStep]) {
+                this.snare.triggerAttackRelease('16n', Tone.now(), velocity);
+            }
+            this.beatStep++;
+        }
     }
 }
 
-export { Synth };
+export { Synth, ROOTS };
