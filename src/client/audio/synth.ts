@@ -5,7 +5,13 @@ import { ChainSynthEvent } from '../event/event';
 import { BlockInfo } from '@polkadot-api/observable-client';
 import { Note } from 'tonal';
 import { volumePercentageToDb } from '../util/audio-util';
-import { BassParameters, MelodyParameters, NewFinalizedBlockEvent, Trigger } from '../data/types';
+import {
+    BassParameters,
+    MelodyParameters,
+    NewFinalizedBlockEvent,
+    Trigger,
+    TriggerEvent,
+} from '../data/types';
 
 const map = (value: number, x1: number, y1: number, x2: number, y2: number): number =>
     ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -41,6 +47,8 @@ class Synth {
     private melodySynth!: Tone.Synth;
     private melodySynthChannel!: Tone.Channel;
     // melody LP filter
+    private melodySynthSplit!: Tone.Split;
+    private melodySynthMerge!: Tone.Merge;
     private melodySynthLowpassFilter!: Tone.Filter;
     // melody send
     private melodySynthDelaySendChannel!: Tone.Channel;
@@ -84,9 +92,9 @@ class Synth {
                 this.updateMelodyParameters(parameters);
             },
         );
-        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
             if (this.isStarted) {
-                this.processTrigger(trigger);
+                this.processTrigger(event);
             }
         });
     }
@@ -164,6 +172,8 @@ class Synth {
 
         // melody synth
         this.melodySynthChannel = new Tone.Channel({ channelCount: 2 });
+        this.melodySynthChannel.connect(this.mainChannel);
+        this.melodySynthChannel.volume.value = 0;
         this.melodySynth = new Tone.Synth({
             envelope: {
                 attack: 0,
@@ -174,19 +184,17 @@ class Synth {
             oscillator: {
                 type: 'fatsawtooth',
             },
-            portamento: 0.01,
         });
-        // melody lowpass filter
         this.melodySynthLowpassFilter = new Tone.Filter({
             type: 'lowpass',
             frequency: 0,
             rolloff: -12,
             Q: 1,
         });
-        this.melodySynthLowpassFilter.connect(this.melodySynthChannel);
+        console.log('ccf', this.melodySynthLowpassFilter.channelCount);
         this.melodySynth.connect(this.melodySynthLowpassFilter);
-        this.melodySynthChannel.volume.value = 0;
-        this.melodySynthChannel.connect(this.mainChannel);
+        this.melodySynthLowpassFilter.connect(this.melodySynthChannel);
+
         // melody delay send
         this.melodySynthDelaySendChannel = new Tone.Channel();
         this.melodySynthChannel.connect(this.melodySynthDelaySendChannel);
@@ -250,6 +258,7 @@ class Synth {
                 Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
             );
         }
+        this.melodySynth.portamento = map(parameters.portamento, 0, 100, 0, 0.1);
         this.melodySynth.envelope.decay = map(parameters.decay, 0, 100, 0.1, 1);
         this.melodySynthLowpassFilter.frequency.linearRampTo(
             map(parameters.filterCutoff, 0, 100, 60, 12000),
@@ -276,8 +285,8 @@ class Synth {
         );
     }
 
-    processTrigger(trigger: Trigger) {
-        if (trigger == this.melodyParameters.rate && Math.random() > 0.25) {
+    processTrigger(event: TriggerEvent) {
+        if (event.trigger == this.melodyParameters.rate && event.random > 0.1) {
             this.cycle++;
             const notes = this.roots[this.rootIndex][1];
             let note = notes[Math.floor(Math.random() * notes.length)];
@@ -287,7 +296,7 @@ class Synth {
             const now = Tone.now();
             this.melodySynth.triggerAttackRelease(note, '8n', now);
         }
-        if (trigger == this.bassParameters.volumeModulationRate) {
+        if (event.trigger == this.bassParameters.volumeModulationRate) {
             this.bassGain.gain.linearRampTo(1.0, Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC);
             const filterDiff =
                 (this.bassParameters.filterCutoff / 5) *
@@ -299,7 +308,7 @@ class Synth {
             setTimeout(() => {
                 this.bassGain.gain.linearRampTo(
                     1.0 - this.bassParameters.volumeModulationLevel / 100,
-                    (Constants.BLOCK_TIME_MS / trigger.valueOf() / 1000 / 8) * 7,
+                    (Constants.BLOCK_TIME_MS / event.trigger.valueOf() / 1000 / 8) * 7,
                 );
                 this.bassLowpassFilter.frequency.linearRampTo(
                     map(this.bassParameters.filterCutoff, 0, 100, 60, 8000),

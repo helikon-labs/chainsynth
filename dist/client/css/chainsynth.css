@@ -131,6 +131,7 @@ input[type='range'] {
     gap: 12px;
     overflow-y: scroll;
     box-sizing: border-box;
+    padding-bottom: 24px;
 }
 
 .right-panel {
@@ -144,6 +145,7 @@ input[type='range'] {
     gap: 12px;
     overflow-y: scroll;
     box-sizing: border-box;
+    padding-bottom: 24px;
 }
 
 /* */

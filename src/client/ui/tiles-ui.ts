@@ -1,4 +1,4 @@
-import { NewFinalizedBlockEvent, Trigger } from '../data/types';
+import { MelodyParameters, NewFinalizedBlockEvent, Trigger, TriggerEvent } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
 import { Constants } from '../util/constants';
@@ -11,14 +11,18 @@ interface UI {
     toggleButton: HTMLElement;
     transactions: HTMLDivElement;
     events: HTMLDivElement;
+    opacityInput: HTMLInputElement;
+    opacity: HTMLDivElement;
 }
 
 class TilesUI {
     private readonly ui: UI;
     private readonly eventBus = EventBus.getInstance();
 
-    private isOn = false;
-    private triggerRate = Trigger.X32;
+    private isOn = true;
+    private opacity = 0;
+    private triggerRate = Trigger.X16;
+    private readonly eventDenominator = 17;
 
     private color = { r: 255, g: 255, b: 255, a: 1 };
 
@@ -29,6 +33,8 @@ class TilesUI {
             toggleButton: <HTMLDivElement>document.getElementById('tiles-toggle-button'),
             transactions: <HTMLDivElement>document.getElementById('tiles-transactions'),
             events: <HTMLDivElement>document.getElementById('tiles-events'),
+            opacityInput: <HTMLInputElement>document.getElementById('tiles-opacity-input'),
+            opacity: <HTMLDivElement>document.getElementById('tiles-opacity'),
         };
         this.ui.toggleButton.addEventListener('click', (_event) => {
             this.isOn = !this.isOn;
@@ -38,6 +44,11 @@ class TilesUI {
                 this.ui.toggleButton.classList.remove('on');
             }
         });
+        this.ui.opacityInput.addEventListener('input', (_event) => {
+            const value = this.ui.opacityInput.value;
+            this.opacity = Number(value).valueOf() / 100;
+            this.ui.opacity.innerHTML = `${value}%`;
+        });
 
         this.eventBus.register(
             ChainSynthEvent.NEW_FINALIZED_BLOCK,
@@ -45,16 +56,22 @@ class TilesUI {
                 this.processFinalizedBlockEvent(event);
             },
         );
-        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
-            this.processTrigger(trigger);
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
+            this.processTrigger(event);
         });
+        this.eventBus.register(
+            ChainSynthEvent.MELODY_PARAMETERS_UPDATED,
+            (parameters: MelodyParameters) => {
+                this.triggerRate = parameters.rate;
+            },
+        );
     }
 
     private processFinalizedBlockEvent(event: NewFinalizedBlockEvent) {
         let html = '';
         for (let i = 0; i < event.extrinsicCount; i++) {
             html += '<div class="tile-row">';
-            for (let j = 0; j < event.eventCount / 20; j++) {
+            for (let j = 0; j < event.eventCount / this.eventDenominator; j++) {
                 if (j % 3 == 0) {
                     html += '<div class="tile"></div>';
                 } else {
@@ -72,55 +89,31 @@ class TilesUI {
         this.color.b = Math.floor((hash / 256) % 256);
     }
 
-    private processTrigger(trigger: Trigger) {
-        if (!this.isOn || this.triggerRate != trigger) {
+    private processTrigger(event: TriggerEvent) {
+        if (!this.isOn || event.trigger != this.triggerRate || event.random <= 0.1) {
             return;
         }
         const tiles = document.getElementsByClassName('tile');
         let randomIndex = Math.floor(Math.random() * tiles.length);
-        const tile1 = tiles.item(randomIndex);
+        const tile = tiles.item(randomIndex);
         randomIndex = Math.floor(Math.random() * tiles.length);
-        let time = Constants.BLOCK_TIME_MS;
-        switch (trigger) {
-            case Trigger.X1:
-                time /= 1;
-                break;
-            case Trigger.X2:
-                time /= 2;
-                break;
-            case Trigger.X4:
-                time /= 4;
-                break;
-            case Trigger.X6:
-                time /= 6;
-                break;
-            case Trigger.X8:
-                time /= 8;
-                break;
-            case Trigger.X12:
-                time /= 12;
-                break;
-            case Trigger.X16:
-                time /= 16;
-                break;
-            case Trigger.X32:
-                time /= 32;
-                break;
-        }
-        if (tile1) {
+        const time = Constants.BLOCK_TIME_MS / event.trigger.valueOf();
+        if (tile) {
+            const tileDiv = tile as HTMLDivElement;
+            tileDiv.style.opacity = this.opacity.toString();
             const color = { r: this.color.r, g: this.color.g, b: this.color.b, a: 1 };
-            const targetColor = { r: 0, g: 0, b: 0, a: 0 };
+            const targetColor = { r: this.color.r, g: this.color.g, b: this.color.b, a: 0 };
             const tween = createTween(
                 color,
                 targetColor,
                 TWEEN.Easing.Exponential.InOut,
-                time * 2,
+                time * 2.5,
                 () => {
-                    (tile1 as HTMLDivElement).style.backgroundColor =
+                    (tile as HTMLDivElement).style.backgroundColor =
                         `rgba(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)}, ${color.a.toFixed(2)})`;
                 },
                 () => {
-                    (tile1 as HTMLDivElement).style.backgroundColor =
+                    (tile as HTMLDivElement).style.backgroundColor =
                         `rgba(${Math.round(color.r)}, ${Math.round(color.g)}, ${Math.round(color.b)}, ${color.a.toFixed(2)})`;
                 },
             );

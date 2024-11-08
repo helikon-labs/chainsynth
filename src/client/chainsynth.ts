@@ -10,7 +10,7 @@ import {
     INIT_REACTOR_PARAMS,
 } from './util/constants';
 import { Synth } from './audio/synth';
-import { NewFinalizedBlockEvent, Trigger } from './data/types';
+import { NewFinalizedBlockEvent, Trigger, TriggerEvent } from './data/types';
 
 class ChainSynth {
     private readonly ui: UI;
@@ -77,11 +77,16 @@ class ChainSynth {
         });
         this.triggerTimeouts = [];
         for (const trigger of triggers) {
-            this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
+            const random = Math.random();
+            this.eventBus.dispatch<TriggerEvent>(ChainSynthEvent.TRIGGER, { trigger, random });
             for (let i = 1; i < trigger.valueOf(); i++) {
                 const timeout = setTimeout(
                     () => {
-                        this.eventBus.dispatch<Trigger>(ChainSynthEvent.TRIGGER, trigger);
+                        const random = Math.random();
+                        this.eventBus.dispatch<TriggerEvent>(ChainSynthEvent.TRIGGER, {
+                            trigger,
+                            random,
+                        });
                     },
                     (Constants.BLOCK_TIME_MS / trigger.valueOf()) * i,
                 );

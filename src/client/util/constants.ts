@@ -77,6 +77,7 @@ export const INIT_REACTOR_PARAMS: ReactorParameters = {
 export const INIT_MELODY_PARAMS: MelodyParameters = {
     isOn: true,
     level: 0,
+    portamento: 0,
     decay: 20,
     filterCutoff: 5,
     delaySend: 0,

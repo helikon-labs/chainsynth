@@ -158,6 +158,11 @@
                     <div class="module-input-value" id="melody-level">0%</div>
                 </div>
                 <div class="module-row">
+                    <div class="module-input-title">PT</div>
+                    <input type="range" value="0" id="melody-portamento-input" />
+                    <div class="module-input-value" id="melody-portamento">0%</div>
+                </div>
+                <div class="module-row">
                     <div class="module-input-title">DE</div>
                     <input type="range" value="0" id="melody-decay-input" />
                     <div class="module-input-value" id="melody-decay">0%</div>
@@ -232,6 +237,7 @@
                     </div>
                 </div>
             </div>
+            <div style="width: 100%; height: 120px"></div>
         </div>
         <div class="right-panel">
             <div class="module no-display" id="block-module">
@@ -351,7 +357,10 @@
                 <div class="module-title-row">
                     <div class="module-title">TILES</div>
                     <div class="flex-spacer"></div>
-                    <em class="fas fa-power-off module-toggle-button" id="tiles-toggle-button"></em>
+                    <em
+                        class="fas fa-power-off module-toggle-button on"
+                        id="tiles-toggle-button"
+                    ></em>
                 </div>
                 <div class="module-row">
                     <div class="module-input-title">EX</div>
@@ -362,6 +371,11 @@
                     <div class="module-input-title">EV</div>
                     <div class="flex-spacer"></div>
                     <div class="module-input-value" id="tiles-events">0</div>
+                </div>
+                <div class="module-row">
+                    <div class="module-input-title">OP</div>
+                    <input type="range" value="0" id="tiles-opacity-input" />
+                    <div class="module-input-value" id="tiles-opacity">0%</div>
                 </div>
             </div>
         </div>

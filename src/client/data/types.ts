@@ -37,6 +37,7 @@ interface ReactorParameters {
 interface MelodyParameters {
     isOn: boolean;
     level: number;
+    portamento: number;
     decay: number;
     filterCutoff: number;
     delaySend: number;
@@ -49,4 +50,16 @@ interface NewFinalizedBlockEvent {
     eventCount: number;
 }
 
-export { BassParameters, ReactorParameters, MelodyParameters, NewFinalizedBlockEvent, Trigger };
+interface TriggerEvent {
+    trigger: Trigger;
+    random: number;
+}
+
+export {
+    BassParameters,
+    ReactorParameters,
+    MelodyParameters,
+    NewFinalizedBlockEvent,
+    Trigger,
+    TriggerEvent,
+};

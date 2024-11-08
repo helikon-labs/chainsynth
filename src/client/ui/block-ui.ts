@@ -4,7 +4,7 @@ import { ChainSynthEvent } from '../event/event';
 import { formatNumber, truncate } from '../util/format';
 import { createTween, fadeElement, startTween } from '../util/tween';
 import { Constants } from '../util/constants';
-import { NewFinalizedBlockEvent, Trigger } from '../data/types';
+import { NewFinalizedBlockEvent, Trigger, TriggerEvent } from '../data/types';
 import * as TWEEN from '@tweenjs/tween.js';
 
 interface UI {
@@ -64,8 +64,8 @@ class BlockUI {
         this.eventBus.register(ChainSynthEvent.NEW_BEST_BLOCK, (block: BlockInfo) => {
             this.processBestBlock(block);
         });
-        this.eventBus.register(ChainSynthEvent.TRIGGER, (trigger: Trigger) => {
-            this.processTrigger(trigger);
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
+            this.processTrigger(event);
         });
         this.eventBus.register(
             ChainSynthEvent.NEW_FINALIZED_BLOCK,
@@ -99,10 +99,10 @@ class BlockUI {
         this.ui.events.innerHTML = event.eventCount.toString();
     }
 
-    private processTrigger(trigger: Trigger) {
+    private processTrigger(event: TriggerEvent) {
         let element = this.ui.x1Signal;
         let time = Constants.BLOCK_TIME_MS;
-        switch (trigger) {
+        switch (event.trigger) {
             case Trigger.X1:
                 element = this.ui.x1Signal;
                 time /= 1;

@@ -8,6 +8,8 @@ interface UI {
     toggleButton: HTMLElement;
     levelInput: HTMLInputElement;
     level: HTMLDivElement;
+    portamentoInput: HTMLInputElement;
+    portamento: HTMLDivElement;
     decayInput: HTMLInputElement;
     decay: HTMLDivElement;
     filterCutoffInput: HTMLInputElement;
@@ -35,6 +37,7 @@ class MelodyUI {
     private parameters: MelodyParameters = {
         isOn: true,
         level: 0,
+        portamento: 0,
         decay: 0,
         filterCutoff: 50,
         delaySend: 0,
@@ -47,6 +50,8 @@ class MelodyUI {
             toggleButton: <HTMLDivElement>document.getElementById('melody-toggle-button'),
             levelInput: <HTMLInputElement>document.getElementById('melody-level-input'),
             level: <HTMLInputElement>document.getElementById('melody-level'),
+            portamentoInput: <HTMLInputElement>document.getElementById('melody-portamento-input'),
+            portamento: <HTMLInputElement>document.getElementById('melody-portamento'),
             decayInput: <HTMLInputElement>document.getElementById('melody-decay-input'),
             decay: <HTMLInputElement>document.getElementById('melody-decay'),
             filterCutoffInput: <HTMLInputElement>(
@@ -84,6 +89,15 @@ class MelodyUI {
             const value = Number(this.ui.levelInput.value);
             this.parameters.level = value;
             this.ui.level.innerHTML = `${value}%`;
+            this.eventBus.dispatch<MelodyParameters>(
+                ChainSynthEvent.MELODY_PARAMETERS_UPDATED,
+                this.parameters,
+            );
+        });
+        this.ui.portamentoInput.addEventListener('input', (_event) => {
+            const value = Number(this.ui.portamentoInput.value);
+            this.parameters.portamento = value;
+            this.ui.portamento.innerHTML = `${value}%`;
             this.eventBus.dispatch<MelodyParameters>(
                 ChainSynthEvent.MELODY_PARAMETERS_UPDATED,
                 this.parameters,
@@ -271,6 +285,8 @@ class MelodyUI {
         this.parameters = initParams;
         this.ui.levelInput.value = this.parameters.level.toString();
         this.ui.level.innerHTML = `${this.parameters.level}%`;
+        this.ui.portamentoInput.value = this.parameters.portamento.toString();
+        this.ui.portamento.innerHTML = `${this.parameters.portamento}%`;
         this.ui.decayInput.value = this.parameters.decay.toString();
         this.ui.decay.innerHTML = `${this.parameters.decay}%`;
         this.ui.filterCutoffInput.value = this.parameters.filterCutoff.toString();
