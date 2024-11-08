@@ -191,7 +191,6 @@ class Synth {
             rolloff: -12,
             Q: 1,
         });
-        console.log('ccf', this.melodySynthLowpassFilter.channelCount);
         this.melodySynth.connect(this.melodySynthLowpassFilter);
         this.melodySynthLowpassFilter.connect(this.melodySynthChannel);
 

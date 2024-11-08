@@ -23,6 +23,7 @@ class TilesUI {
     private opacity = 0;
     private triggerRate = Trigger.X16;
     private readonly eventDenominator = 17;
+    private lastIndex = -1;
 
     private color = { r: 255, g: 255, b: 255, a: 1 };
 
@@ -95,6 +96,9 @@ class TilesUI {
         }
         const tiles = document.getElementsByClassName('tile');
         let randomIndex = Math.floor(Math.random() * tiles.length);
+        while (randomIndex == this.lastIndex) {
+            randomIndex = Math.floor(Math.random() * tiles.length);
+        }
         const tile = tiles.item(randomIndex);
         randomIndex = Math.floor(Math.random() * tiles.length);
         const time = Constants.BLOCK_TIME_MS / event.trigger.valueOf();

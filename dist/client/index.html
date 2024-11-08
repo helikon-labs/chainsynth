@@ -37,207 +37,249 @@
             <em class="fas fa-power-off"></em>
         </div>
         <div class="left-panel">
-            <!-- bass module -->
-            <div class="module bass-module no-display" id="bass-module">
-                <div class="module-title-row">
-                    <div class="module-title">BASS</div>
-                    <div class="flex-spacer"></div>
-                    <em
-                        class="fas fa-power-off on module-toggle-button"
-                        id="bass-toggle-button"
-                    ></em>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">VO</div>
-                    <input type="range" value="0" id="bass-level-input" />
-                    <div class="module-input-value" id="bass-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">RR</div>
-                    <input type="range" value="75" id="bass-root-level-input" />
-                    <div class="module-input-value" id="bass-root-level">75%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">PO</div>
-                    <input type="range" value="0" id="bass-octave-level-input" />
-                    <div class="module-input-value" id="bass-octave-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">P5</div>
-                    <input type="range" value="0" id="bass-fifth-level-input" />
-                    <div class="module-input-value" id="bass-fifth-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">FC</div>
-                    <input type="range" value="75" id="bass-filter-cutoff-input" />
-                    <div class="module-input-value" id="bass-filter-cutoff">75%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">RV</div>
-                    <input type="range" value="0" id="bass-reverb-level-input" />
-                    <div class="module-input-value" id="bass-reverb-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">VM</div>
-                    <input type="range" value="0" id="bass-volume-modulation-level-input" />
-                    <div class="module-input-value" id="bass-volume-modulation-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">RT</div>
-                </div>
-                <div class="rate-selection-row">
-                    <div class="module-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-64x"></div>
-                            <div>64x</div>
+            <div class="left-panel-top-spacer"></div>
+            <div class="left-panel-scroll">
+                <div class="left-panel-scroll-content">
+                    <!-- bass module -->
+                    <div class="module bass-module no-display" id="bass-module">
+                        <div class="module-title-row">
+                            <div class="module-title">BASS</div>
+                            <div class="flex-spacer"></div>
+                            <em
+                                class="fas fa-power-off on module-toggle-button"
+                                id="bass-toggle-button"
+                            ></em>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-48x"></div>
-                            <div>48x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">VO</div>
+                            <input type="range" value="0" id="bass-level-input" />
+                            <div class="module-input-value" id="bass-level">0%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-32x"></div>
-                            <div>32x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">RR</div>
+                            <input type="range" value="75" id="bass-root-level-input" />
+                            <div class="module-input-value" id="bass-root-level">75%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-24x"></div>
-                            <div>24x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">PO</div>
+                            <input type="range" value="0" id="bass-octave-level-input" />
+                            <div class="module-input-value" id="bass-octave-level">0%</div>
+                        </div>
+                        <div class="module-row">
+                            <div class="module-input-title">P5</div>
+                            <input type="range" value="0" id="bass-fifth-level-input" />
+                            <div class="module-input-value" id="bass-fifth-level">0%</div>
+                        </div>
+                        <div class="module-row">
+                            <div class="module-input-title">FC</div>
+                            <input type="range" value="75" id="bass-filter-cutoff-input" />
+                            <div class="module-input-value" id="bass-filter-cutoff">75%</div>
+                        </div>
+                        <div class="module-row">
+                            <div class="module-input-title">RV</div>
+                            <input type="range" value="0" id="bass-reverb-level-input" />
+                            <div class="module-input-value" id="bass-reverb-level">0%</div>
+                        </div>
+                        <div class="module-row">
+                            <div class="module-input-title">VM</div>
+                            <input type="range" value="0" id="bass-volume-modulation-level-input" />
+                            <div class="module-input-value" id="bass-volume-modulation-level">
+                                0%
+                            </div>
+                        </div>
+                        <div class="module-row">
+                            <div class="module-input-title">RT</div>
+                        </div>
+                        <div class="rate-selection-row">
+                            <div class="module-row">
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-64x"
+                                    ></div>
+                                    <div>64x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-48x"
+                                    ></div>
+                                    <div>48x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-32x"
+                                    ></div>
+                                    <div>32x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-24x"
+                                    ></div>
+                                    <div>24x</div>
+                                </div>
+                            </div>
+                            <div class="module-row block-module-signal-row">
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-16x"
+                                    ></div>
+                                    <div>16x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-12x"
+                                    ></div>
+                                    <div>12x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-8x"
+                                    ></div>
+                                    <div>8x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-6x"
+                                    ></div>
+                                    <div>6x</div>
+                                </div>
+                            </div>
+                            <div class="module-row block-module-signal-row">
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal on"
+                                        id="bass-volume-modulation-rate-4x"
+                                    ></div>
+                                    <div>4x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-3x"
+                                    ></div>
+                                    <div>3x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-2x"
+                                    ></div>
+                                    <div>2x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div
+                                        class="module-signal"
+                                        id="bass-volume-modulation-rate-1x"
+                                    ></div>
+                                    <div>1x</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="module-row block-module-signal-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-16x"></div>
-                            <div>16x</div>
+                    <!-- melody module -->
+                    <div class="module melody-module no-display" id="melody-module">
+                        <div class="module-title-row">
+                            <div class="module-title">MELODY</div>
+                            <div class="flex-spacer"></div>
+                            <em
+                                class="fas fa-power-off on module-toggle-button"
+                                id="melody-toggle-button"
+                            ></em>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-12x"></div>
-                            <div>12x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">VO</div>
+                            <input type="range" value="0" id="melody-level-input" />
+                            <div class="module-input-value" id="melody-level">0%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-8x"></div>
-                            <div>8x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">PT</div>
+                            <input type="range" value="0" id="melody-portamento-input" />
+                            <div class="module-input-value" id="melody-portamento">0%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-6x"></div>
-                            <div>6x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">DE</div>
+                            <input type="range" value="0" id="melody-decay-input" />
+                            <div class="module-input-value" id="melody-decay">0%</div>
                         </div>
-                    </div>
-                    <div class="module-row block-module-signal-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal on" id="bass-volume-modulation-rate-4x"></div>
-                            <div>4x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">FC</div>
+                            <input type="range" value="50" id="melody-filter-cutoff-input" />
+                            <div class="module-input-value" id="melody-filter-cutoff">50%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-3x"></div>
-                            <div>3x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">DL</div>
+                            <input type="range" value="0" id="melody-delay-send-input" />
+                            <div class="module-input-value" id="melody-delay-send">0%</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-2x"></div>
-                            <div>2x</div>
+                        <div class="module-row">
+                            <div class="module-input-title">RT</div>
                         </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="bass-volume-modulation-rate-1x"></div>
-                            <div>1x</div>
+                        <div class="rate-selection-row">
+                            <div class="module-row">
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-64x"></div>
+                                    <div>64x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-48x"></div>
+                                    <div>48x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-32x"></div>
+                                    <div>32x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-24x"></div>
+                                    <div>24x</div>
+                                </div>
+                            </div>
+                            <div class="module-row block-module-signal-row">
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-16x"></div>
+                                    <div>16x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-12x"></div>
+                                    <div>12x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-8x"></div>
+                                    <div>8x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-6x"></div>
+                                    <div>6x</div>
+                                </div>
+                            </div>
+                            <div class="module-row block-module-signal-row">
+                                <div class="module-signal-container">
+                                    <div class="module-signal on" id="melody-rate-4x"></div>
+                                    <div>4x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-3x"></div>
+                                    <div>3x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-2x"></div>
+                                    <div>2x</div>
+                                </div>
+                                <div class="module-signal-container">
+                                    <div class="module-signal" id="melody-rate-1x"></div>
+                                    <div>1x</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- melody module -->
-            <div class="module melody-module no-display" id="melody-module">
-                <div class="module-title-row">
-                    <div class="module-title">MELODY</div>
-                    <div class="flex-spacer"></div>
-                    <em
-                        class="fas fa-power-off on module-toggle-button"
-                        id="melody-toggle-button"
-                    ></em>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">VO</div>
-                    <input type="range" value="0" id="melody-level-input" />
-                    <div class="module-input-value" id="melody-level">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">PT</div>
-                    <input type="range" value="0" id="melody-portamento-input" />
-                    <div class="module-input-value" id="melody-portamento">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">DE</div>
-                    <input type="range" value="0" id="melody-decay-input" />
-                    <div class="module-input-value" id="melody-decay">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">FC</div>
-                    <input type="range" value="50" id="melody-filter-cutoff-input" />
-                    <div class="module-input-value" id="melody-filter-cutoff">50%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">DL</div>
-                    <input type="range" value="0" id="melody-delay-send-input" />
-                    <div class="module-input-value" id="melody-delay-send">0%</div>
-                </div>
-                <div class="module-row">
-                    <div class="module-input-title">RT</div>
-                </div>
-                <div class="rate-selection-row">
-                    <div class="module-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-64x"></div>
-                            <div>64x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-48x"></div>
-                            <div>48x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-32x"></div>
-                            <div>32x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-24x"></div>
-                            <div>24x</div>
-                        </div>
-                    </div>
-                    <div class="module-row block-module-signal-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-16x"></div>
-                            <div>16x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-12x"></div>
-                            <div>12x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-8x"></div>
-                            <div>8x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-6x"></div>
-                            <div>6x</div>
-                        </div>
-                    </div>
-                    <div class="module-row block-module-signal-row">
-                        <div class="module-signal-container">
-                            <div class="module-signal on" id="melody-rate-4x"></div>
-                            <div>4x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-3x"></div>
-                            <div>3x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-2x"></div>
-                            <div>2x</div>
-                        </div>
-                        <div class="module-signal-container">
-                            <div class="module-signal" id="melody-rate-1x"></div>
-                            <div>1x</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="width: 100%; height: 120px"></div>
         </div>
         <div class="right-panel">
             <div class="module no-display" id="block-module">

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Constants } from '../util/constants';
+import { Constants, INIT_BASS_PARAMS } from '../util/constants';
 import { createTween, fadeElement, startTween } from '../util/tween';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -9,7 +9,12 @@ import { EventBus } from '../event/event-bus';
 import { ChainSynthEvent } from '../event/event';
 import { BlockInfo } from '@polkadot-api/observable-client';
 import * as TWEEN from '@tweenjs/tween.js';
-import { NewFinalizedBlockEvent, ReactorParameters } from '../data/types';
+import {
+    BassParameters,
+    NewFinalizedBlockEvent,
+    ReactorParameters,
+    TriggerEvent,
+} from '../data/types';
 
 const map = (value: number, x1: number, y1: number, x2: number, y2: number): number =>
     ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -49,6 +54,8 @@ class ChainSynthScene {
     private perturbationDamping = 0.5;
 
     private currentColor = { r: 126, g: 252, b: 224 };
+
+    private bassParameters = INIT_BASS_PARAMS;
 
     constructor(container: HTMLElement, reactorParams: ReactorParameters) {
         this.perturbationDamping = reactorParams.perturbation / 100;
@@ -123,6 +130,17 @@ class ChainSynthScene {
                 }
             },
         );
+        this.eventBus.register(
+            ChainSynthEvent.BASS_PARAMETERS_UPDATED,
+            (parameters: BassParameters) => {
+                this.updateBassParameters(parameters);
+            },
+        );
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
+            if (this.isStarted) {
+                this.processTrigger(event);
+            }
+        });
     }
 
     start(onComplete: () => void) {
@@ -282,6 +300,36 @@ class ChainSynthScene {
         this.reactor = new THREE.Mesh(this.reactorGeometry, this.reactorMaterial);
         this.reactor.rotation.z = 0.5;
         this.scene.add(this.reactor);
+    }
+
+    private updateBassParameters(parameters: BassParameters) {
+        this.bassParameters = parameters;
+    }
+
+    private processTrigger(event: TriggerEvent) {
+        if (event.trigger != this.bassParameters.volumeModulationRate) {
+            return;
+        }
+        const targetRadius = { radius: this.reactorRadius };
+        const radius = {
+            radius:
+                this.reactorRadius *
+                map(this.bassParameters.volumeModulationLevel, 0, 100, 1.01, 1.3),
+        };
+        this.reactorRadius = targetRadius.radius;
+        this.updateGeometry(this.perturbationFactor);
+        const colorTween = createTween(
+            radius,
+            targetRadius,
+            TWEEN.Easing.Exponential.Out,
+            Constants.BLOCK_TIME_MS / event.trigger.valueOf() / 2,
+            undefined,
+            () => {
+                this.reactorRadius = radius.radius;
+                this.updateGeometry(this.perturbationFactor);
+            },
+        );
+        startTween(colorTween);
     }
 }
 
