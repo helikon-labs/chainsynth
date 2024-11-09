@@ -7,8 +7,8 @@ export abstract class Constants {
     static readonly KUSAMA_RPC_URL = 'wss://rpc.ibp.network/kusama';
     //static readonly POLKADOT_RPC_URL = 'wss://rpc.ibp.network/polkadot';
     //static readonly POLKADOT_RPC_URL = 'wss://rpc.helikon.io/polkadot';
-    //static readonly POLKADOT_RPC_URL = 'wss://rpc.polkadot.io';
-    static readonly POLKADOT_RPC_URL = 'wss://bkk.helikon.io/polkadot';
+    static readonly POLKADOT_RPC_URL = 'wss://rpc.polkadot.io';
+    static readonly POLKADOT_BKK_RPC_URL = 'wss://bkk.helikon.io/polkadot';
     // blockchain
     static readonly BLOCK_TIME_MS = 6000;
     // orbit control

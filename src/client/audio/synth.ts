@@ -247,6 +247,7 @@ class Synth {
         // kick
         this.kickChannel = new Tone.Channel();
         this.kickChannel.connect(this.mainChannel);
+        this.kickChannel.volume.value = volumePercentageToDb(0);
         this.kick = new Tone.MembraneSynth({
             pitchDecay: 0.05,
             octaves: 4,
@@ -257,6 +258,7 @@ class Synth {
         // snare
         this.snareChannel = new Tone.Channel();
         this.snareChannel.connect(this.mainChannel);
+        this.snareChannel.volume.value = volumePercentageToDb(0);
         this.snare = new Tone.NoiseSynth({
             noise: { type: 'white' },
             envelope: { attack: 0.001, decay: 0.2, sustain: 0 },

@@ -37,12 +37,24 @@ class DataStore {
         this.delegate = delegate;
     }
 
+    private getSubdomain(): string | null {
+        const hostname = window.location.hostname;
+        const parts = hostname.split('.');
+        if (parts.length > 2) {
+            return parts[0];
+        }
+        return null;
+    }
+
     async init() {
-        this.client = createClient(
-            withPolkadotSdkCompat(getWsProvider(Constants.POLKADOT_RPC_URL)),
-        );
+        let rpcURL = Constants.POLKADOT_RPC_URL;
+        const subdomain = this.getSubdomain();
+        if (subdomain == 'bkk') {
+            rpcURL = Constants.POLKADOT_BKK_RPC_URL;
+        }
+        this.client = createClient(withPolkadotSdkCompat(getWsProvider(rpcURL)));
         this.api = this.client.getTypedApi(polkadot);
-        const wsProvider = new WsProvider(Constants.POLKADOT_RPC_URL);
+        const wsProvider = new WsProvider(rpcURL);
         this.jsAPI = await ApiPromise.create({ provider: wsProvider });
 
         //const chain = await this.smoldot.addChain({ chainSpec });
