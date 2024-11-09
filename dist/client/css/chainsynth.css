@@ -140,7 +140,7 @@ input[type='range'] {
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .left-panel-scroll-content {
@@ -160,7 +160,7 @@ input[type='range'] {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    overflow-y: scroll;
+    overflow-y: auto;
     box-sizing: border-box;
     padding-bottom: 24px;
 }
