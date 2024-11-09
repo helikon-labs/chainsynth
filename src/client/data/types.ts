@@ -55,6 +55,17 @@ interface TriggerEvent {
     random: number;
 }
 
+interface KickParameters {
+    isOn: boolean;
+    level: number;
+    distortion: number;
+}
+
+interface SnareParameters {
+    isOn: boolean;
+    level: number;
+}
+
 export {
     BassParameters,
     ReactorParameters,
@@ -62,4 +73,6 @@ export {
     NewFinalizedBlockEvent,
     Trigger,
     TriggerEvent,
+    KickParameters,
+    SnareParameters,
 };

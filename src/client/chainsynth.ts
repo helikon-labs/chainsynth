@@ -6,8 +6,10 @@ import { UI, UIDelegate } from './ui/ui';
 import {
     Constants,
     getInitBassParams,
+    getInitKickParams,
     getInitMelodyParams,
     getInitReactorParams,
+    getInitSnareParams,
 } from './util/constants';
 import { Synth } from './audio/synth';
 import { NewFinalizedBlockEvent, Trigger, TriggerEvent } from './data/types';
@@ -62,6 +64,8 @@ class ChainSynth {
                 getInitReactorParams(),
                 getInitBassParams(),
                 getInitMelodyParams(),
+                getInitKickParams(),
+                getInitSnareParams(),
                 () => {
                     this.synth.start();
                     this.startOscillator();

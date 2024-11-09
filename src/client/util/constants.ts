@@ -1,6 +1,13 @@
 import * as TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
-import { BassParameters, MelodyParameters, ReactorParameters, Trigger } from '../data/types';
+import {
+    BassParameters,
+    KickParameters,
+    MelodyParameters,
+    ReactorParameters,
+    SnareParameters,
+    Trigger,
+} from '../data/types';
 
 export abstract class Constants {
     // RPC
@@ -88,5 +95,20 @@ export function getInitMelodyParams(): MelodyParameters {
         filterCutoff: 5,
         delaySend: 0,
         rate: Trigger.X16,
+    };
+}
+
+export function getInitKickParams(): KickParameters {
+    return {
+        isOn: true,
+        level: 0,
+        distortion: 0,
+    };
+}
+
+export function getInitSnareParams(): SnareParameters {
+    return {
+        isOn: true,
+        level: 0,
     };
 }

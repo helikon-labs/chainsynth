@@ -8,10 +8,18 @@ import { BassUI } from './bass-ui';
 import { MelodyUI } from './melody-ui';
 import { ReactorUI } from './reactor-ui';
 import { VolumeControl } from './volume-control';
-import { BassParameters, MelodyParameters, ReactorParameters } from '../data/types';
+import {
+    BassParameters,
+    KickParameters,
+    MelodyParameters,
+    ReactorParameters,
+    SnareParameters,
+} from '../data/types';
 import { TriggerUI } from './trigger-ui';
 import { TilesUI } from './tiles-ui';
 import { MainBlockUI } from './main-block-ui';
+import { KickUI } from './kick-ui';
+import { SnareUI } from './snare-ui';
 
 interface UIDelegate {
     onTurnOn(): void;
@@ -32,6 +40,8 @@ class UI {
     private readonly bass: BassUI;
     private readonly reactor: ReactorUI;
     private readonly melody: MelodyUI;
+    private readonly kick: KickUI;
+    private readonly snare: SnareUI;
     private readonly trigger: TriggerUI;
     private readonly tiles: TilesUI;
     private readonly mainBlock: MainBlockUI;
@@ -55,6 +65,8 @@ class UI {
         this.bass = new BassUI();
         this.reactor = new ReactorUI();
         this.melody = new MelodyUI();
+        this.kick = new KickUI();
+        this.snare = new SnareUI();
         this.trigger = new TriggerUI();
         this.tiles = new TilesUI();
         this.mainBlock = new MainBlockUI();
@@ -110,6 +122,8 @@ class UI {
         reactorParams: ReactorParameters,
         bassParams: BassParameters,
         melodyParams: MelodyParameters,
+        kickParams: KickParameters,
+        snareParams: SnareParameters,
         onComplete: () => void,
     ) {
         fadeElement(this.loading, false, () => {
@@ -118,6 +132,8 @@ class UI {
                     this.bass.show(bassParams);
                     this.reactor.show(reactorParams);
                     this.melody.show(melodyParams);
+                    this.kick.show(kickParams);
+                    this.snare.show(snareParams);
                     this.trigger.show();
                     this.tiles.show();
                     this.mainBlock.show();

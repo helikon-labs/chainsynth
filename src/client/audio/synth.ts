@@ -7,8 +7,10 @@ import { Note } from 'tonal';
 import { volumePercentageToDb } from '../util/audio-util';
 import {
     BassParameters,
+    KickParameters,
     MelodyParameters,
     NewFinalizedBlockEvent,
+    SnareParameters,
     Trigger,
     TriggerEvent,
 } from '../data/types';
@@ -96,10 +98,14 @@ class Synth {
     // melody send
     private melodySynthDelaySendChannel!: Tone.Channel;
 
-    // kick
     private beatStep = 0;
+    // kick
+    private kickParameters!: KickParameters;
     private kick!: Tone.MembraneSynth;
     private kickChannel!: Tone.Channel;
+    private kickDistortion!: Tone.Distortion;
+    // snare
+    private snareParameters!: SnareParameters;
     private snare!: Tone.NoiseSynth;
     private snareChannel!: Tone.Channel;
 
@@ -133,6 +139,18 @@ class Synth {
             ChainSynthEvent.MELODY_PARAMETERS_UPDATED,
             (parameters: MelodyParameters) => {
                 this.updateMelodyParameters(parameters);
+            },
+        );
+        this.eventBus.register(
+            ChainSynthEvent.KICK_PARAMETERS_UPDATED,
+            (parameters: KickParameters) => {
+                this.updateKickParameters(parameters);
+            },
+        );
+        this.eventBus.register(
+            ChainSynthEvent.SNARE_PARAMETERS_UPDATED,
+            (parameters: SnareParameters) => {
+                this.updateSnareParameters(parameters);
             },
         );
         this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
@@ -254,11 +272,13 @@ class Synth {
         this.kickChannel.volume.value = volumePercentageToDb(0);
         this.kick = new Tone.MembraneSynth({
             pitchDecay: 0.05,
-            octaves: 4,
+            octaves: 2.5,
             oscillator: { type: 'sine' },
-            envelope: { attack: 0.005, decay: 0.25, sustain: 0 },
+            envelope: { attack: 0.005, decay: 0.5, sustain: 0 },
         });
-        this.kick.connect(this.kickChannel);
+        this.kickDistortion = new Tone.Distortion(0);
+        this.kick.connect(this.kickDistortion);
+        this.kickDistortion.connect(this.kickChannel);
         // snare
         this.snareChannel = new Tone.Channel();
         this.snareChannel.connect(this.mainChannel);
@@ -338,6 +358,37 @@ class Synth {
         this.melodyParameters = parameters;
     }
 
+    private updateKickParameters(parameters: KickParameters) {
+        if (parameters.isOn) {
+            this.kickChannel.volume.linearRampTo(
+                volumePercentageToDb(parameters.level),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        } else {
+            this.kickChannel.volume.linearRampTo(
+                volumePercentageToDb(0),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        }
+        this.kickDistortion.distortion = parameters.distortion / 100;
+        this.kickParameters = parameters;
+    }
+
+    private updateSnareParameters(parameters: SnareParameters) {
+        if (parameters.isOn) {
+            this.snareChannel.volume.linearRampTo(
+                volumePercentageToDb(parameters.level),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        } else {
+            this.snareChannel.volume.linearRampTo(
+                volumePercentageToDb(0),
+                Constants.PARAMETERS_CHANGE_RAMP_TIME_SEC,
+            );
+        }
+        this.snareParameters = parameters;
+    }
+
     private processFinalizedBlock(block: BlockInfo) {
         const bits = parseInt(block.hash.slice(-8), 16).toString(2).padStart(32, '0');
         for (let i = 15; i >= 0; i--) {
@@ -399,7 +450,7 @@ class Synth {
         }
         if (event.trigger == Trigger.X64) {
             if (this.kickSteps[this.beatStep]) {
-                this.kick.triggerAttackRelease('C1', '16n', Tone.now(), velocity);
+                this.kick.triggerAttackRelease('G1', '16n', Tone.now(), velocity);
             }
             if (this.snareSteps[this.beatStep]) {
                 this.snare.triggerAttackRelease('16n', Tone.now(), velocity);
