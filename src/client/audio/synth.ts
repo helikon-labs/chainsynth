@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import { Constants } from '../util/constants';
+import { Constants, getInitBassParams, getInitMelodyParams } from '../util/constants';
 import { EventBus } from '../event/event-bus';
 import { ChainSynthEvent } from '../event/event';
 import { BlockInfo } from '@polkadot-api/observable-client';
@@ -139,6 +139,10 @@ class Synth {
             if (this.isStarted) {
                 this.processTrigger(event);
             }
+        });
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.updateBassParameters(getInitBassParams());
+            this.updateMelodyParameters(getInitMelodyParams());
         });
     }
 

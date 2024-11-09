@@ -5,9 +5,9 @@ import { EventBus } from './event/event-bus';
 import { UI, UIDelegate } from './ui/ui';
 import {
     Constants,
-    INIT_BASS_PARAMS,
-    INIT_MELODY_PARAMS,
-    INIT_REACTOR_PARAMS,
+    getInitBassParams,
+    getInitMelodyParams,
+    getInitReactorParams,
 } from './util/constants';
 import { Synth } from './audio/synth';
 import { NewFinalizedBlockEvent, Trigger, TriggerEvent } from './data/types';
@@ -30,7 +30,7 @@ class ChainSynth {
 
     constructor() {
         this.dataStore = new DataStore(this.dataStoreDelegate);
-        this.ui = new UI(this.uiDelegate, INIT_REACTOR_PARAMS);
+        this.ui = new UI(this.uiDelegate, getInitReactorParams());
 
         this.eventBus.register(ChainSynthEvent.NEW_BEST_BLOCK, (_block: BlockInfo) => {});
         this.eventBus.register(
@@ -47,7 +47,7 @@ class ChainSynth {
         this.ui.showLoading();
         this.ui.setLoadingStatus(':: connecting to blockchain ::');
         this.synth = new Synth();
-        await this.synth.init(INIT_BASS_PARAMS, INIT_MELODY_PARAMS);
+        await this.synth.init(getInitBassParams(), getInitMelodyParams());
         setTimeout(async () => {
             await this.dataStore.init();
             this.dataStore.subscribe();
@@ -58,10 +58,15 @@ class ChainSynth {
         this.isStarted = true;
         this.ui.setLoadingStatus(':: connection established ::');
         setTimeout(() => {
-            this.ui.start(INIT_REACTOR_PARAMS, INIT_BASS_PARAMS, INIT_MELODY_PARAMS, () => {
-                this.synth.start();
-                this.startOscillator();
-            });
+            this.ui.start(
+                getInitReactorParams(),
+                getInitBassParams(),
+                getInitMelodyParams(),
+                () => {
+                    this.synth.start();
+                    this.startOscillator();
+                },
+            );
             this.isStarted = true;
         }, Constants.ARTIFICIAL_DELAY_MS);
     }

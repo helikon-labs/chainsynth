@@ -66,6 +66,12 @@ class TilesUI {
                 this.triggerRate = parameters.rate;
             },
         );
+
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.opacity = 0;
+            this.ui.opacity.innerHTML = '0%';
+            this.ui.opacityInput.value = '0';
+        });
     }
 
     private processFinalizedBlockEvent(event: NewFinalizedBlockEvent) {

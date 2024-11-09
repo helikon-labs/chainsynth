@@ -56,31 +56,37 @@ export abstract class Polkadot {
     static readonly DECIMAL_COUNT = 10;
 }
 
-export const INIT_BASS_PARAMS: BassParameters = {
-    isOn: true,
-    level: 100,
-    rootLevel: 25,
-    octaveLevel: 18,
-    fifthLevel: 10,
-    filterCutoff: 10,
-    reverbLevel: 40,
-    volumeModulationLevel: 0,
-    volumeModulationRate: Trigger.X4,
-};
+export function getInitBassParams(): BassParameters {
+    return {
+        isOn: true,
+        level: 100,
+        rootLevel: 25,
+        octaveLevel: 18,
+        fifthLevel: 10,
+        filterCutoff: 10,
+        reverbLevel: 40,
+        volumeModulationLevel: 0,
+        volumeModulationRate: Trigger.X4,
+    };
+}
 
-export const INIT_REACTOR_PARAMS: ReactorParameters = {
-    isOn: true,
-    perturbation: 50,
-    radius: 50,
-    trace: 50,
-};
+export function getInitReactorParams(): ReactorParameters {
+    return {
+        isOn: true,
+        perturbation: 50,
+        radius: 50,
+        trace: 50,
+    };
+}
 
-export const INIT_MELODY_PARAMS: MelodyParameters = {
-    isOn: true,
-    level: 0,
-    portamento: 0,
-    decay: 20,
-    filterCutoff: 5,
-    delaySend: 0,
-    rate: Trigger.X16,
-};
+export function getInitMelodyParams(): MelodyParameters {
+    return {
+        isOn: true,
+        level: 0,
+        portamento: 0,
+        decay: 20,
+        filterCutoff: 5,
+        delaySend: 0,
+        rate: Trigger.X16,
+    };
+}

@@ -25,6 +25,7 @@ class UI {
     private readonly loading: HTMLDivElement;
     private readonly loadingStatus: HTMLSpanElement;
     private readonly turnOnButton: HTMLDivElement;
+    private readonly resetButton: HTMLDivElement;
 
     private readonly scene: ChainSynthScene;
     private readonly volumeControl: VolumeControl;
@@ -47,6 +48,7 @@ class UI {
         this.loading = <HTMLDivElement>document.getElementById('loading-container');
         this.loadingStatus = <HTMLSpanElement>document.getElementById('loading-status');
         this.turnOnButton = <HTMLDivElement>document.getElementById('turn-on-button');
+        this.resetButton = <HTMLDivElement>document.getElementById('reset-button');
 
         this.scene = new ChainSynthScene(this.sceneContainer, reactorParams);
         this.volumeControl = new VolumeControl();
@@ -62,12 +64,18 @@ class UI {
         hide(this.turnOnButton);
         this.volumeControl.hide();
 
+        this.logoContainer.addEventListener('click', async (_event) => {
+            location.reload();
+        });
         this.turnOnButton.addEventListener('click', async (_event) => {
             fadeElement(this.turnOnButton, false, () => {
                 setTimeout(() => {
                     this.delegate.onTurnOn();
                 }, Constants.CONTENT_FADE_ANIM_DURATION_MS);
             });
+        });
+        this.resetButton.addEventListener('click', async (_event) => {
+            this.eventBus.dispatch(ChainSynthEvent.RESET);
         });
 
         setTimeout(() => {

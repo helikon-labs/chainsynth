@@ -6,4 +6,5 @@ export abstract class ChainSynthEvent {
     static readonly REACTOR_PARAMETERS_UPDATED = 'event.reactor_parameters_updated';
     static readonly MELODY_PARAMETERS_UPDATED = 'event.melody_parameters_updated';
     static readonly TRIGGER = 'event.trigger';
+    static readonly RESET = 'event.reset';
 }

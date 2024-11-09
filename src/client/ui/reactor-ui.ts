@@ -1,6 +1,7 @@
 import { ReactorParameters } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
+import { getInitReactorParams } from '../util/constants';
 import { fadeElement } from '../util/tween';
 
 interface UI {
@@ -77,6 +78,10 @@ class ReactorUI {
                 this.parameters,
             );
         });
+
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.show(getInitReactorParams());
+        });
     }
 
     show(initParams: ReactorParameters) {
@@ -87,8 +92,9 @@ class ReactorUI {
         this.ui.radius.innerHTML = `${this.parameters.radius}%`;
         this.ui.traceInput.value = this.parameters.trace.toString();
         this.ui.trace.innerHTML = `${this.parameters.trace}%`;
-
-        fadeElement(this.ui.root, true);
+        if (this.ui.root.classList.contains('no-display')) {
+            fadeElement(this.ui.root, true);
+        }
     }
 }
 

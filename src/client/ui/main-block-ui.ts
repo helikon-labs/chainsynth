@@ -1,5 +1,5 @@
 import { ROOTS } from '../audio/synth';
-import { NewFinalizedBlockEvent } from '../data/types';
+import { NewFinalizedBlockEvent, Trigger, TriggerEvent } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
 import { Constants } from '../util/constants';
@@ -13,6 +13,7 @@ interface UI {
     hash: HTMLDivElement;
     rootNote: HTMLDivElement;
     chord: HTMLDivElement;
+    hashBitContainers: HTMLDivElement[];
     hashBits: HTMLDivElement[];
 }
 
@@ -20,14 +21,20 @@ class MainBlockUI {
     private readonly ui: UI;
     private readonly eventBus = EventBus.getInstance();
     private lastBlockTime = 0;
+    private beatStep = 0;
 
     constructor() {
         const hashBits: HTMLDivElement[] = [];
+        const hashBitContainers: HTMLDivElement[] = [];
         for (let i = 0; i < 32; i++) {
-            const element = <HTMLDivElement>(
+            const hashBitContainer = <HTMLDivElement>(
+                document.getElementById(`main-block-module-hash-bit-container-${i}`)
+            );
+            hashBitContainers.push(hashBitContainer);
+            const hashBit = <HTMLDivElement>(
                 document.getElementById(`main-block-module-hash-bit-${i}`)
             );
-            hashBits.push(element);
+            hashBits.push(hashBit);
         }
         this.ui = {
             root: <HTMLDivElement>document.getElementById('main-block-module'),
@@ -36,6 +43,7 @@ class MainBlockUI {
             hash: <HTMLDivElement>document.getElementById('main-block-module-hash'),
             rootNote: <HTMLDivElement>document.getElementById('main-block-module-root-note'),
             chord: <HTMLDivElement>document.getElementById('main-block-module-chord'),
+            hashBitContainers,
             hashBits,
         };
 
@@ -49,6 +57,10 @@ class MainBlockUI {
                 this.processFinalizedBlock(event);
             },
         );
+
+        this.eventBus.register(ChainSynthEvent.TRIGGER, (event: TriggerEvent) => {
+            this.processTrigger(event);
+        });
     }
 
     private updateBlockProgress() {
@@ -79,6 +91,20 @@ class MainBlockUI {
 
     show() {
         fadeElement(this.ui.root, true);
+    }
+
+    private processTrigger(event: TriggerEvent) {
+        if (event.trigger == Trigger.X4) {
+            this.beatStep = 0;
+        }
+        if (event.trigger == Trigger.X64) {
+            for (const container of this.ui.hashBitContainers) {
+                container.classList.remove('current-step');
+            }
+            this.ui.hashBitContainers[this.beatStep].classList.add('current-step');
+            this.ui.hashBitContainers[this.beatStep + 16].classList.add('current-step');
+            this.beatStep++;
+        }
     }
 }
 

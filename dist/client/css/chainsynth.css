@@ -69,6 +69,8 @@ input[type='range'] {
     display: flex;
     flex-flow: row nowrap;
     align-items: baseline;
+    cursor: pointer;
+    z-index: 999;
 }
 
 .logo {
@@ -213,13 +215,24 @@ input[type='range'] {
 /* volume control */
 .volume-control-container {
     position: fixed;
-    top: 0px;
-    right: 0px;
-    padding: 12px;
+    top: 16px;
+    right: 24px;
     display: flex;
     flex-direction: row;
     gap: 6px;
     align-items: center;
+}
+
+.reset-button {
+    margin-right: 8px;
+    cursor: pointer;
+    border: 1px solid #7efce0;
+    padding: 4px 6px;
+    border-radius: 8px;
+}
+
+.reset-button:hover {
+    text-decoration: underline;
 }
 
 .volume-control-container em {
@@ -412,6 +425,18 @@ input[type='range'] {
 .main-block-module-number {
     width: 100%;
     text-align: end;
+}
+
+.main-block-module-signal-container {
+    display: flex;
+    flex-direction: row;
+    padding: 1px;
+    border-radius: 50%;
+    border: 1px solid #ffffff00;
+}
+
+.current-step {
+    border-color: #ffffff !important;
 }
 
 .main-block-module-signal {

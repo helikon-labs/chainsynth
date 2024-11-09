@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Constants, INIT_BASS_PARAMS } from '../util/constants';
+import { Constants, getInitBassParams, getInitReactorParams } from '../util/constants';
 import { createTween, fadeElement, startTween } from '../util/tween';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -55,7 +55,7 @@ class ChainSynthScene {
 
     private currentColor = { r: 126, g: 252, b: 224 };
 
-    private bassParameters = INIT_BASS_PARAMS;
+    private bassParameters = getInitBassParams();
 
     constructor(container: HTMLElement, reactorParams: ReactorParameters) {
         this.perturbationDamping = reactorParams.perturbation / 100;
@@ -117,16 +117,7 @@ class ChainSynthScene {
             ChainSynthEvent.REACTOR_PARAMETERS_UPDATED,
             (parameters: ReactorParameters) => {
                 if (this.isStarted) {
-                    this.reactorRadius = map(parameters.radius, 0, 100, 15, 40);
-                    this.perturbationDamping = map(parameters.perturbation, 0, 100, 0, 1);
-                    this.afterimagePass.uniforms['damp'].value = map(
-                        parameters.trace,
-                        0,
-                        100,
-                        0,
-                        1,
-                    );
-                    this.updateGeometry(this.perturbationFactor);
+                    this.updateReactorParameters(parameters);
                 }
             },
         );
@@ -141,6 +132,17 @@ class ChainSynthScene {
                 this.processTrigger(event);
             }
         });
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.updateReactorParameters(getInitReactorParams());
+            this.updateBassParameters(getInitBassParams());
+        });
+    }
+
+    private updateReactorParameters(parameters: ReactorParameters) {
+        this.reactorRadius = map(parameters.radius, 0, 100, 15, 40);
+        this.perturbationDamping = map(parameters.perturbation, 0, 100, 0, 1);
+        this.afterimagePass.uniforms['damp'].value = map(parameters.trace, 0, 100, 0, 1);
+        this.updateGeometry(this.perturbationFactor);
     }
 
     start(onComplete: () => void) {

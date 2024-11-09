@@ -27,6 +27,7 @@
             <span id="loading-status">:: connecting to blockchain ::</span>
         </div>
         <div class="volume-control-container no-display" id="volume-control-container">
+            <div class="reset-button" id="reset-button">RESET</div>
             <em class="fas fa-volume-off" id="volume-down"></em>
             <div class="volume-level-container" id="volume-level-container">
                 <div class="volume-level" id="volume-level"></div>
@@ -419,46 +420,206 @@
                 <div id="main-block-module-chord">Ab MAJOR</div>
             </div>
             <div class="main-block-module-row">
-                <div class="main-block-module-row-title">HASH :: BITS 15-0</div>
+                <div class="main-block-module-row-title">HASH :: BITS 0-15</div>
             </div>
             <div class="main-block-module-row">
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-15"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-14"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-13"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-12"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-11"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-10"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-9"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-8"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-7"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-6"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-5"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-4"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-3"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-2"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-1"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-0"></div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-0"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-0"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-1"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-1"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-2"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-2"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-3"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-3"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-4"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-4"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-5"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-5"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-6"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-6"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-7"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-7"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-8"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-8"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-9"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-9"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-10"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-10"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-11"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-11"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-12"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-12"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-13"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-13"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-14"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-14"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-15"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-15"></div>
+                </div>
             </div>
             <div class="main-block-module-row">
-                <div class="main-block-module-row-title">HASH :: BITS 31-16</div>
+                <div class="main-block-module-row-title">HASH :: BITS 16-31</div>
             </div>
             <div class="main-block-module-row">
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-31"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-30"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-29"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-28"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-27"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-26"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-25"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-24"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-23"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-22"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-21"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-20"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-19"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-18"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-17"></div>
-                <div class="main-block-module-signal" id="main-block-module-hash-bit-16"></div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-16"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-16"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-17"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-17"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-18"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-18"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-19"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-19"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-20"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-20"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-21"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-21"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-22"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-22"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-23"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-23"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-24"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-24"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-25"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-25"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-26"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-26"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-27"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-27"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-28"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-28"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-29"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-29"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-30"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-30"></div>
+                </div>
+                <div
+                    class="main-block-module-signal-container"
+                    id="main-block-module-hash-bit-container-31"
+                >
+                    <div class="main-block-module-signal" id="main-block-module-hash-bit-31"></div>
+                </div>
             </div>
         </div>
     </body>

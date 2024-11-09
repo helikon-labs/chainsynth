@@ -1,6 +1,7 @@
 import { BassParameters, Trigger } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
+import { getInitBassParams } from '../util/constants';
 import { fadeElement } from '../util/tween';
 
 interface UI {
@@ -258,6 +259,10 @@ class BassUI {
                 this.parameters,
             );
         });
+
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.show(getInitBassParams());
+        });
     }
 
     show(params: BassParameters) {
@@ -284,7 +289,9 @@ class BassUI {
         this.ui.volumeModulationLevelInput.value = this.parameters.volumeModulationLevel.toString();
         this.ui.volumeModulationLevel.innerHTML = `${this.parameters.volumeModulationLevel}%`;
         this.updateRate();
-        fadeElement(this.ui.root, true);
+        if (this.ui.root.classList.contains('no-display')) {
+            fadeElement(this.ui.root, true);
+        }
     }
 
     private updateRate() {

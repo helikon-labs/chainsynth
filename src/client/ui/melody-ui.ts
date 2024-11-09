@@ -1,6 +1,7 @@
 import { MelodyParameters, Trigger } from '../data/types';
 import { ChainSynthEvent } from '../event/event';
 import { EventBus } from '../event/event-bus';
+import { getInitMelodyParams } from '../util/constants';
 import { fadeElement } from '../util/tween';
 
 interface UI {
@@ -226,6 +227,10 @@ class MelodyUI {
                 this.parameters,
             );
         });
+
+        this.eventBus.register(ChainSynthEvent.RESET, () => {
+            this.show(getInitMelodyParams());
+        });
     }
 
     private updateRate() {
@@ -294,7 +299,9 @@ class MelodyUI {
         this.ui.delaySendInput.value = this.parameters.delaySend.toString();
         this.ui.delaySend.innerHTML = `${this.parameters.delaySend}%`;
         this.updateRate();
-        fadeElement(this.ui.root, true);
+        if (this.ui.root.classList.contains('no-display')) {
+            fadeElement(this.ui.root, true);
+        }
     }
 }
 

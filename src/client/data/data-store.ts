@@ -49,7 +49,7 @@ class DataStore {
     async init() {
         let rpcURL = Constants.POLKADOT_RPC_URL;
         const subdomain = this.getSubdomain();
-        if (subdomain == 'bkk') {
+        if (subdomain == 'bkk' || window.location.hostname == 'localhost') {
             rpcURL = Constants.POLKADOT_BKK_RPC_URL;
         }
         this.client = createClient(withPolkadotSdkCompat(getWsProvider(rpcURL)));
